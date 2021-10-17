@@ -1,6 +1,4 @@
-import 'package:aniflix/views/favourites/favourites.dart';
 import 'package:aniflix/views/home/tabsceen.dart';
-import 'package:aniflix/views/search/searchscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -36,6 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 32,
+                        fontFamily: "Bebas Neue",
                         fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
@@ -48,7 +47,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                       child: Text(
-                          (_mode == AuthMode.signin) ? "Sign Up" : "Sign In"))
+                        (_mode == AuthMode.signin) ? "Sign Up" : "Sign In",
+                        style: const TextStyle(color: Colors.red),
+                      ))
                 ],
               ),
             ),
@@ -127,9 +128,11 @@ class _SignUpPageState extends State<SignUpPage> {
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String title;
-  const CustomTextField(
-      {Key? key, required this.controller, required this.title})
-      : super(key: key);
+  const CustomTextField({
+    Key? key,
+    required this.controller,
+    required this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,11 @@
+import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/views/favourites/favourites.dart';
-import 'package:aniflix/views/home/homepage.dart';
-import 'package:aniflix/views/search/searchscreen.dart';
+import 'package:aniflix/views/home/tabs/homepage.dart';
+import 'package:aniflix/views/home/tabs/songspage.dart';
+import 'package:aniflix/views/home/tabs/search/searchscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({Key? key}) : super(key: key);
@@ -13,31 +16,36 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   int _currentIndex = 0;
-
-  List<Widget> _pages = [HomePage(), SearchScreen(), FavouritesScreen()];
+  static const List<Widget> _pages = [
+    HomePage(),
+    SearchScreen(),
+    SongsPage(),
+    // FavouritesScreen()
+  ];
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final padding = MediaQuery.of(context).padding;
-
     return Scaffold(
         appBar: AppBar(
           title: const Text(
             "ANIFLIX",
-            style: TextStyle(
-                color: Colors.red, fontSize: 27, fontWeight: FontWeight.bold),
+            style: TextStyles.appbarStyle,
           ),
-          actions: const [
-            CircleAvatar(
-              backgroundColor: Colors.red,
-              child: Text(
-                "S",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
+          actions: [
+            GestureDetector(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FavouritesScreen())),
+              child: const CircleAvatar(
+                backgroundColor: Colors.red,
+                child: Text("S",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
+                maxRadius: 18,
               ),
-              maxRadius: 18,
+            ),
+            const SizedBox(
+              width: 8,
             )
           ],
         ),
@@ -50,12 +58,13 @@ class _TabScreenState extends State<TabScreen> {
           },
           currentIndex: _currentIndex,
           items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text("Home")),
+                icon: Icon(Icons.explore), label: "Explore"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.explore), title: Text("explore")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.favorite), title: Text("favoraites")),
+                icon: Icon(Icons.music_note_rounded), label: "Songs"),
+            // BottomNavigationBarItem(
+            //     icon: Icon(Icons.favorite), label: "Favoraites"),
           ],
         ));
   }
