@@ -6,6 +6,7 @@ import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/providers/animeprovider.dart';
 import 'package:aniflix/providers/bannerprovider.dart';
 import 'package:aniflix/views/home/anime/detail.dart';
+import 'package:aniflix/views/home/anime/widget/animewidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,17 +18,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final size = MediaQuery.of(context).size;
     final banner = Provider.of<BannerProvider>(context).getBanner();
     return Scaffold(
       body: Stack(
         children: [
           Image.network(banner.image, fit: BoxFit.fitWidth, width: size.width),
-          SizedBox(
-              child: SingleChildScrollView(
+          SingleChildScrollView(
             child: Column(
               children: [
                 Container(
@@ -108,11 +109,14 @@ class _HomePageState extends State<HomePage>
                 ),
               ],
             ),
-          ))
+          )
         ],
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class AnimesByGenra extends StatefulWidget {
@@ -123,12 +127,14 @@ class AnimesByGenra extends StatefulWidget {
   _AnimesByGenraState createState() => _AnimesByGenraState();
 }
 
-class _AnimesByGenraState extends State<AnimesByGenra> {
+class _AnimesByGenraState extends State<AnimesByGenra>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final animesProvider = Provider.of<AnimeProvider>(context);
     final gnerasAnime = animesProvider.getAnimeByGnera(widget.gnera);
+    super.build(context);
     return Container(
       width: size.width,
       padding: const EdgeInsets.all(8),
@@ -151,48 +157,17 @@ class _AnimesByGenraState extends State<AnimesByGenra> {
                     : gnerasAnime.length,
                 itemBuilder: (context, index) {
                   return (animesProvider.datastatus == DataStatus.loading)
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: LoaderWidget.rectangular(
-                              height: size.height * 0.22,
-                              width: size.width * 0.32))
-                      : Container(
-                          margin: const EdgeInsets.all(8),
-                          width: size.width * 0.32,
-                          height: size.height * 0.22,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                  image: NetworkImage(gnerasAnime[index].image),
-                                  fit: BoxFit.cover)),
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.playlist_add_sharp),
-                                  onPressed: () {},
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.info),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (context) => AnimeDetail(
-                                                  id: gnerasAnime[index].id,
-                                                  type: ResultType.all,
-                                                )));
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                      ? LoaderWidget.rectangular(
+                          height: size.height * 0.22, width: size.width * 0.32)
+                      : AnimeWidget(
+                          anime: gnerasAnime[index], resulType: ResultType.all);
                 }),
           )
         ],
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

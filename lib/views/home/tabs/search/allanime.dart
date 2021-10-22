@@ -4,7 +4,7 @@ import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/shimmer.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/providers/searchprovider.dart';
-import 'package:aniflix/views/home/anime/detail.dart';
+import 'package:aniflix/views/home/anime/widget/animewidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,51 +71,33 @@ class _AllAnimeScreenState extends State<AllAnimeScreen> {
             style: TextStyles.secondaryTitle,
           ),
         ),
-        body: GridView.builder(
-            controller: gridController,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: .7,
-            ),
-            itemCount: (loading)
-                ? 15
-                : (widget.genra != "")
-                    ? searchProvider.gneraAnime.length + 1
-                    : searchProvider.searchResult.length,
-            itemBuilder: (context, index) => (loading)
-                ? LoaderWidget.rectangular(
-                    height: size.height * 0.3,
-                  )
-                : (searchProvider.gneraAnime.length == index)
-                    ? listEnd
-                    : Container(
-                        margin: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                                image: NetworkImage((widget.genra != "")
-                                    ? searchProvider.gneraAnime[index].image
-                                    : searchProvider.searchResult[index].image),
-                                fit: BoxFit.cover)),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            icon: const Icon(Icons.info),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AnimeDetail(
-                                        id: (widget.genra != "")
-                                            ? searchProvider
-                                                .gneraAnime[index].id
-                                            : searchProvider
-                                                .searchResult[index].id,
-                                        type: (widget.genra != "")
-                                            ? ResultType.gnera
-                                            : ResultType.search,
-                                      )));
-                            },
-                          ),
-                        ),
-                      )));
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: GridView.builder(
+              controller: gridController,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.6,
+              ),
+              itemCount: (loading)
+                  ? 15
+                  : (widget.genra != "")
+                      ? searchProvider.gneraAnime.length + 1
+                      : searchProvider.searchResult.length,
+              itemBuilder: (context, index) => (loading)
+                  ? LoaderWidget.rectangular(
+                      height: size.height * 0.3,
+                    )
+                  : (searchProvider.gneraAnime.length == index &&
+                          searchProvider.gneraAnime.isNotEmpty)
+                      ? listEnd
+                      : AnimeWidget(
+                          anime: (widget.genra != "")
+                              ? searchProvider.gneraAnime[index]
+                              : searchProvider.searchResult[index],
+                          resulType: (widget.genra != "")
+                              ? ResultType.gnera
+                              : ResultType.search)),
+        ));
   }
 }

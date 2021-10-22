@@ -1,10 +1,9 @@
 import 'package:aniflix/common/message.dart';
 import 'package:aniflix/common/progress_indicator.dart';
 import 'package:aniflix/providers/episodeprovider.dart';
+import 'package:aniflix/views/home/anime/widget/episode/episode_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../videoscreen.dart';
 
 class AllEpisodesPage extends StatefulWidget {
   final String title;
@@ -58,18 +57,7 @@ class _AllEpisodesPageState extends State<AllEpisodesPage> {
           itemBuilder: (context, index) {
             return (episodesProvider.episodes.length == index)
                 ? listEnd
-                : ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => VideoScreen(
-                              title: episodesProvider.episodes[index].title,
-                              videoUrl:
-                                  episodesProvider.episodes[index].videoUrl,
-                            ))),
-                    leading: const Icon(Icons.play_arrow),
-                    title: Text(
-                        "Episode ${episodesProvider.episodes[index].number}"),
-                    subtitle: Text(episodesProvider.episodes[index].title),
-                  );
+                : EpisodeTile(episode: episodesProvider.episodes[index]);
           }),
     );
   }

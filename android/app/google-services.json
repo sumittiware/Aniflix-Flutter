@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "728387745031",
+    "firebase_url": "https://pokemon-backend-76ba7-default-rtdb.firebaseio.com",
+    "project_id": "pokemon-backend-76ba7",
+    "storage_bucket": "pokemon-backend-76ba7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728387745031:android:2c663a930586045ee6c1a2",
+        "android_client_info": {
+          "package_name": "com.example.aniflix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728387745031-pf2pu968ud8jgr212kb8ohc731s68the.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk_pitk3PaA6zBnfejmGSmmoua2KEKK5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728387745031-pf2pu968ud8jgr212kb8ohc731s68the.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728387745031:android:8aed2ae08a05a374e6c1a2",
+        "android_client_info": {
+          "package_name": "com.tbs.pokedex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728387745031-cq64gijok71e10tjpo1i1t9nu1ddq2ij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbs.pokedex",
+            "certificate_hash": "5edbda1e6183775ea2cf5121f017747e03e1347b"
+          }
+        },
+        {
+          "client_id": "728387745031-pf2pu968ud8jgr212kb8ohc731s68the.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk_pitk3PaA6zBnfejmGSmmoua2KEKK5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728387745031-pf2pu968ud8jgr212kb8ohc731s68the.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

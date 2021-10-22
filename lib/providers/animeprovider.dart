@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/models/anime.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AnimeProvider with ChangeNotifier {
   final List<Anime> _animes = [];
@@ -22,7 +22,8 @@ class AnimeProvider with ChangeNotifier {
   bool isSaved(int id) => _wishlist.contains(id);
 
   Future<void> fetchAnimes() async {
-    final url = Uri.parse("https://api.aniapi.com/v1/anime");
+    int page = Random().nextInt(30);
+    final url = Uri.parse("https://api.aniapi.com/v1/anime?page=${page + 1}");
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) throw "Something went wrong!!";

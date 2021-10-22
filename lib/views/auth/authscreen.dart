@@ -1,4 +1,3 @@
-import 'package:aniflix/views/home/tabsceen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -13,6 +12,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   bool _isCheck = false;
+  bool loading = false;
   AuthMode _mode = AuthMode.signup;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -104,18 +104,21 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 15,
             ),
             GestureDetector(
-              onTap: () => Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) {
-                return const TabScreen();
-              })),
+              onTap: () => {},
               child: Container(
                 width: double.maxFinite,
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: const BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Text((_mode == AuthMode.signup) ? "Sign Up" : "Sign In"),
+                child: (loading)
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text((_mode == AuthMode.signup) ? "Sign Up" : "Sign In"),
               ),
             ),
           ],

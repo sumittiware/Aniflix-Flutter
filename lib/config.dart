@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,3 +14,18 @@ Future setLandscapeOrientation() async {
 
 void launchURL(url) async =>
     await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+
+void setStatusBarColor() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.black,
+      systemNavigationBarColor: Colors.black,
+      systemNavigationBarDividerColor: Colors.black));
+}
+
+void hideStatusBar() {
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+}
+
+void resetStatusbar() {
+  SystemChrome.restoreSystemUIOverlays();
+}

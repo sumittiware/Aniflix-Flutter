@@ -7,24 +7,27 @@ class LoaderWidget extends StatelessWidget {
   final Radius borderRadius;
 
   const LoaderWidget.rectangular(
-      {this.width = double.infinity,
+      {Key? key,
+      this.width = double.infinity,
       this.borderRadius = const Radius.circular(12),
-      required this.height});
+      required this.height})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      enabled: true,
-      loop: 3,
-      direction: ShimmerDirection.btt,
-      baseColor: Colors.grey[800]!,
-      highlightColor: Colors.grey[400]!,
-      period: const Duration(seconds: 2),
+      loop: 5,
+      direction: ShimmerDirection.ltr,
+      baseColor: Colors.grey[900]!,
+      highlightColor: Colors.grey[700]!,
+      period: const Duration(milliseconds: 1500),
       child: Container(
+          margin: const EdgeInsets.all(8),
           width: width,
           height: height,
-          decoration:
-              BoxDecoration(borderRadius: BorderRadius.all(borderRadius))),
+          decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.all(borderRadius))),
     );
   }
 }

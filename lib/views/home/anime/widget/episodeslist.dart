@@ -1,13 +1,12 @@
 import 'dart:math';
-
-import 'package:aniflix/common/message.dart';
-import 'package:aniflix/common/progress_indicator.dart';
+import 'package:aniflix/config/shimmer.dart';
 import 'package:aniflix/providers/episodeprovider.dart';
 import 'package:aniflix/views/home/anime/widget/allepisodes.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../videoscreen.dart';
+import 'episode/episode_tile.dart';
 
 class EpisodesList extends StatefulWidget {
   final int id;
@@ -23,7 +22,12 @@ class EpisodesList extends StatefulWidget {
 class _EpisodesListState extends State<EpisodesList> {
   late EpisodeProvider episodesProvider;
   bool loading = true;
-  Widget loader = const CustomProgressIndicator();
+  List<Widget> loader = List.generate(
+      5,
+      (index) => const LoaderWidget.rectangular(
+            height: 50,
+            borderRadius: Radius.circular(0),
+          ));
 
   @override
   void initState() {
@@ -36,46 +40,45 @@ class _EpisodesListState extends State<EpisodesList> {
             }))
         .catchError((err) {
       setState(() {
-        loader = Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(err.toString()),
-        );
+        loader = [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(err.toString()),
+          )
+        ];
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return (loading)
-        ? loader
-        : Column(
-            children: List.generate(
-                min(episodesProvider.episodes.length, 11),
-                (index) => (index == 10)
-                    ? TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => AllEpisodesPage(
-                                  id: widget.id, title: widget.title)));
-                        },
-                        child: const Text(
-                          "Show More",
-                          style: TextStyle(color: Colors.red),
-                        ))
-                    : ListTile(
-                        onTap: () =>
+    return Column(
+      children: (loading)
+          ? loader
+          : List.generate(
+              min(episodesProvider.episodes.length, 11),
+              (index) => (index == 10)
+                  ? Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.red)),
+                          onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => VideoScreen(
-                                      title: episodesProvider
-                                          .episodes[index].title,
-                                      videoUrl: episodesProvider
-                                          .episodes[index].videoUrl,
-                                    ))),
-                        leading: const Icon(Icons.play_arrow),
-                        title: Text(
-                            "Episode ${episodesProvider.episodes[index].number}"),
-                        subtitle: Text(episodesProvider.episodes[index].title),
-                      )),
-          );
+                                builder: (context) => AllEpisodesPage(
+                                    id: widget.id, title: widget.title)));
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
+                            child: Text(
+                              "Show More",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          )),
+                    )
+                  : EpisodeTile(episode: episodesProvider.episodes[index])),
+    );
   }
 }

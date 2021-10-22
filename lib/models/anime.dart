@@ -12,15 +12,15 @@ class Anime {
   List<dynamic> genres;
 
   Anime(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.episode,
-      required this.image,
-      required this.trailer,
-      required this.score,
-      required this.season,
+      {this.id = -1,
+      this.title = "",
+      this.description = "",
+      this.episode = 0,
+      this.image = "",
+      this.trailer = "",
+      this.score = 0,
+      this.season = 0,
       required this.genres,
-      required this.year,
-      required this.duration});
+      this.year = 0,
+      this.duration = 0});
 }

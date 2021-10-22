@@ -22,6 +22,7 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   void initState() {
     super.initState();
+    hideStatusBar();
     _controller = VideoPlayerController.network(widget.videoUrl)
       ..addListener(() {
         if (_controller.value.isBuffering) {
@@ -34,6 +35,9 @@ class _VideoScreenState extends State<VideoScreen> {
             loading = false;
           });
         }
+        if (_controller.value.position == _controller.value.duration) {
+          Navigator.pop(context);
+        }
       })
       ..initialize().then((_) {
         setState(() {
@@ -41,13 +45,13 @@ class _VideoScreenState extends State<VideoScreen> {
         });
         _controller.play();
       }).catchError((err) {});
-
     setLandscapeOrientation();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    resetStatusbar();
     setDefaultOrientation();
     super.dispose();
   }
@@ -55,7 +59,6 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Stack(children: [
         Center(
@@ -63,7 +66,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 aspectRatio: (fullScreen)
                     ? size.height / size.width
                     : _controller.value.aspectRatio,
-                child: (_controller.value.isBuffering)
+                child: (_controller.value.isBuffering || loading)
                     ? const CustomProgressIndicator()
                     : VideoPlayer(_controller))),
         if (error != "")
@@ -77,8 +80,8 @@ class _VideoScreenState extends State<VideoScreen> {
         })),
         if (!loading && !hideTools)
           Center(
-              child: Padding(
-                  padding: const EdgeInsets.all(30),
+              child: Container(
+                  margin: const EdgeInsets.all(80),
                   child: (_controller.value.isPlaying)
                       ? IconButton(
                           onPressed: () {

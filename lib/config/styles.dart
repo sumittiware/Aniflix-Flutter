@@ -12,4 +12,5 @@ class TextStyles {
       TextStyle(fontWeight: FontWeight.bold, fontSize: 22);
 
   static const TextStyle secondaryTitle = TextStyle(fontSize: 20);
+  static const TextStyle secondaryTitle2 = TextStyle(fontSize: 18);
 }

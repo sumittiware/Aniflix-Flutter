@@ -3,7 +3,7 @@ import 'package:aniflix/common/progress_indicator.dart';
 import 'package:aniflix/config.dart';
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/styles.dart';
-import 'package:aniflix/providers/songprvider.dart';
+import 'package:aniflix/providers/songprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

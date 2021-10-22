@@ -1,4 +1,3 @@
-import 'package:aniflix/config.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/providers/searchprovider.dart';
 
@@ -41,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   controller: _searchController,
                   obscureText: false,
                   decoration: const InputDecoration(
-                    labelText: "Search",
+                    hintText: "Search",
                     border: InputBorder.none,
                     labelStyle: TextStyle(
                       fontSize: 17,
