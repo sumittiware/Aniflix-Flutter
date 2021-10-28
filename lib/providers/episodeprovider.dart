@@ -47,5 +47,6 @@ class EpisodeProvider with ChangeNotifier {
     lastPage = 1;
     _isFetched = false;
     _eposides.clear();
+    notifyListeners();
   }
 }

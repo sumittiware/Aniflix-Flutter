@@ -1,7 +1,7 @@
 import 'package:aniflix/common/message.dart';
 import 'package:aniflix/common/progress_indicator.dart';
 import 'package:aniflix/providers/episodeprovider.dart';
-import 'package:aniflix/views/home/anime/widget/episode/episode_tile.dart';
+import 'package:aniflix/widgets/episode_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

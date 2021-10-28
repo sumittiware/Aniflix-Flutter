@@ -10,7 +10,8 @@ import 'package:aniflix/providers/episodeprovider.dart';
 import 'package:aniflix/providers/searchprovider.dart';
 import 'package:aniflix/providers/songprovider.dart';
 import 'package:aniflix/providers/wishlistprovider.dart';
-import 'package:aniflix/views/home/anime/widget/episodeslist.dart';
+import 'package:aniflix/widgets/episodeslist.dart';
+import 'package:aniflix/widgets/songList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -76,7 +77,7 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
     bannerProvider = Provider.of<BannerProvider>(context, listen: false);
     episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
     wishlistProvider = Provider.of<WishListProvider>(context, listen: false);
-
+    songProvider = Provider.of<SongProvider>(context, listen: false);
     getResult();
     controller = YoutubePlayerController(
       initialVideoId: anime.trailer.split("/").last,
@@ -111,12 +112,14 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
   @override
   void didPushNext() {
     controller.pause();
+    songProvider.pause();
     super.didPushNext();
   }
 
   @override
   void dispose() {
     episodeProvider.resetValues();
+    songProvider.resetValues();
     controller.dispose();
     super.dispose();
   }
@@ -280,7 +283,61 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                         style: TextStyles.secondaryTitle2,
                       ),
                     ),
-                    EpisodesList(id: anime.id, title: anime.title)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                            onTap: () => setState(() {
+                              showEpisodes = true;
+                            }),
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Episodes",
+                                style: TextStyles.secondaryTitle2,
+                              ),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 3,
+                                          color: (showEpisodes)
+                                              ? Colors.red
+                                              : Colors.black))),
+                            ),
+                          )),
+                          Expanded(
+                              child: InkWell(
+                            onTap: () => setState(() {
+                              showEpisodes = false;
+                            }),
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Songs",
+                                style: TextStyles.secondaryTitle2,
+                              ),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 3,
+                                          color: (showEpisodes)
+                                              ? Colors.black
+                                              : Colors.red))),
+                            ),
+                          ))
+                        ],
+                      ),
+                    ),
+                    (showEpisodes)
+                        ? EpisodesList(id: anime.id, title: anime.title)
+                        : SongList(animeId: anime.id),
+                    SizedBox(
+                      height: 12,
+                    ),
                   ],
                 ),
               ),

@@ -9,6 +9,10 @@ class SearchProvider with ChangeNotifier {
   final List<Anime> _searchResults = [];
   final List<Anime> _gneraResult = [];
   List<dynamic> _gneres = [];
+  List<String> _format = ["TV", "TV short", "Movie", "Special", "Ova"];
+  List<String> _period = ["Winter", "Spring", "Summer", "Fall"];
+  List<int> _selectedFormat = [];
+  List<int> _selectedPeriod = [];
 
   SearchProvider() {
     fetchGneres();
@@ -19,18 +23,34 @@ class SearchProvider with ChangeNotifier {
   late DataStatus _dataStatus;
 
   DataStatus get dataStatus => _dataStatus;
-
   List<Anime> get gneraAnime => [..._gneraResult];
-
   List<Anime> get searchResult => [..._searchResults];
-
   List<dynamic> get gneres => [..._gneres];
+  List<String> get format => [..._format];
+  List<int> get selectedFormat => [..._selectedFormat];
+  List<String> get period => [..._period];
+  List<int> get selectedPeriod => [..._selectedPeriod];
 
   void resetValues() {
     currentPage = 0;
     lastPage = 1;
     _searchResults.clear();
     _gneraResult.clear();
+  }
+
+  setPeriodFilter(int index) {
+    (!_selectedPeriod.contains(index))
+        ? _selectedPeriod.add(index)
+        : _selectedPeriod.remove(index);
+    print(_selectedPeriod);
+    notifyListeners();
+  }
+
+  setFormatFilter(int index) {
+    (!_selectedFormat.contains(index))
+        ? _selectedFormat.add(index)
+        : _selectedFormat.remove(index);
+    notifyListeners();
   }
 
   Future<void> fetchGneres() async {
@@ -55,8 +75,9 @@ class SearchProvider with ChangeNotifier {
     final url = Uri.parse("https://api.aniapi.com/v1/anime?title=$title");
     try {
       final response = await http.get(url);
-      if (response.statusCode != 200) throw "Something went wrong!!";
       final result = json.decode(response.body);
+      if (result['status_code'] != 200)
+        throw result['message'] ?? "Something went wrong!!";
       result['data']['documents'].forEach((value) {
         _searchResults.add(Anime(
             id: value["id"] ?? 0,
@@ -81,12 +102,18 @@ class SearchProvider with ChangeNotifier {
   Future<void> fetchByGners(String gners) async {
     _dataStatus = DataStatus.loading;
     notifyListeners();
+    final formatQuery =
+        _selectedFormat.isEmpty ? "" : "&formats=" + _selectedFormat.join(",");
+    final seasonQuery =
+        _selectedPeriod.isEmpty ? "" : "&season=" + _selectedPeriod.join(",");
     final url = Uri.parse(
-        "https://api.aniapi.com/v1/anime?genres=$gners&page=${currentPage + 1}");
+        "https://api.aniapi.com/v1/anime?genres=$gners$formatQuery$seasonQuery&page=${currentPage + 1}");
     try {
       final response = await http.get(url);
-      if (response.statusCode != 200) throw "Something went wrong!!";
+
       final result = json.decode(response.body);
+      if (result['status_code'] != 200)
+        throw result['message'] ?? "Something went wrong!!";
       result['data']['documents'].forEach((value) {
         _gneraResult.add(Anime(
             id: value["id"] ?? 0,

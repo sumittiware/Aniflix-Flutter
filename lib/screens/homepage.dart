@@ -1,12 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:aniflix/config/enum.dart';
-import 'package:aniflix/config/shimmer.dart';
 import 'package:aniflix/config/styles.dart';
-import 'package:aniflix/providers/animeprovider.dart';
 import 'package:aniflix/providers/bannerprovider.dart';
-import 'package:aniflix/views/home/anime/detail.dart';
-import 'package:aniflix/views/home/anime/widget/animewidget.dart';
+import 'package:aniflix/widgets/animebygnera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +12,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage>
@@ -66,11 +64,12 @@ class _HomePageState extends State<HomePage>
                         ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                                 onPrimary: Colors.white, primary: Colors.red),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const AnimeDetail(
-                                      id: 0, type: ResultType.banner)));
-                            },
+                            onPressed: () => Navigator.pushNamed(
+                                context, '/detailscreen',
+                                arguments: json.encode({
+                                  'id': 0,
+                                  'type': ResultType.banner.index
+                                })),
                             icon: const Icon(Icons.play_arrow),
                             label: const Text("Watch Now"))
                       ],
@@ -109,59 +108,6 @@ class _HomePageState extends State<HomePage>
                 ),
               ],
             ),
-          )
-        ],
-      ),
-    );
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-}
-
-class AnimesByGenra extends StatefulWidget {
-  final String gnera;
-  const AnimesByGenra({Key? key, required this.gnera}) : super(key: key);
-
-  @override
-  _AnimesByGenraState createState() => _AnimesByGenraState();
-}
-
-class _AnimesByGenraState extends State<AnimesByGenra>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final animesProvider = Provider.of<AnimeProvider>(context);
-    final gnerasAnime = animesProvider.getAnimeByGnera(widget.gnera);
-    super.build(context);
-    return Container(
-      width: size.width,
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 4),
-            child: Text(
-              widget.gnera,
-              style: TextStyles.secondaryTitle,
-            ),
-          ),
-          SizedBox(
-            height: size.height * 0.24,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: (animesProvider.datastatus == DataStatus.loading)
-                    ? 5
-                    : gnerasAnime.length,
-                itemBuilder: (context, index) {
-                  return (animesProvider.datastatus == DataStatus.loading)
-                      ? LoaderWidget.rectangular(
-                          height: size.height * 0.22, width: size.width * 0.32)
-                      : AnimeWidget(
-                          anime: gnerasAnime[index], resulType: ResultType.all);
-                }),
           )
         ],
       ),

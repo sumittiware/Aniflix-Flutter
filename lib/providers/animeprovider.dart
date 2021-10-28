@@ -26,8 +26,10 @@ class AnimeProvider with ChangeNotifier {
     final url = Uri.parse("https://api.aniapi.com/v1/anime?page=${page + 1}");
     try {
       final response = await http.get(url);
-      if (response.statusCode != 200) throw "Something went wrong!!";
+
       final result = json.decode(response.body);
+      if (result['status_code'] != 200)
+        throw result['message'] ?? "Something went wrong!!";
       result['data']['documents'].forEach((value) {
         _animes.add(Anime(
             id: value["id"] ?? 0,
@@ -50,11 +52,12 @@ class AnimeProvider with ChangeNotifier {
   }
 
   List<Anime> getAnimeByGnera(String gnera) {
+    print("here");
     List<Anime> result = [];
     for (var element in _animes) {
       if (element.genres.contains(gnera)) result.add(element);
     }
-    result.shuffle();
+
     return result;
   }
 

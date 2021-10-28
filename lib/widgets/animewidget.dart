@@ -1,6 +1,6 @@
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/models/anime.dart';
-import 'package:aniflix/views/home/anime/widget/detailbottomsheet.dart';
+import 'package:aniflix/widgets/detailbottomsheet.dart';
 import 'package:flutter/material.dart';
 
 class AnimeWidget extends StatelessWidget {

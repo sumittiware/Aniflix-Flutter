@@ -1,8 +1,7 @@
 import 'package:aniflix/config/styles.dart';
-import 'package:aniflix/views/favourites/favourites.dart';
-import 'package:aniflix/views/home/tabs/homepage.dart';
-import 'package:aniflix/views/home/tabs/songspage.dart';
-import 'package:aniflix/views/home/tabs/search/searchscreen.dart';
+import 'package:aniflix/screens/wishlist.dart';
+import 'package:aniflix/screens/homepage.dart';
+import 'package:aniflix/screens/searchscreen.dart';
 import 'package:flutter/material.dart';
 
 class TabScreen extends StatefulWidget {
@@ -14,10 +13,10 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   int _currentIndex = 0;
-  static const List<Widget> _pages = [
+  static List<Widget> _pages = [
     HomePage(),
     SearchScreen(),
-    SongsPage(),
+    FavouritesScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -26,24 +25,23 @@ class _TabScreenState extends State<TabScreen> {
         body: Column(
           children: [
             SizedBox(height: padding.top),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.centerLeft,
               child: Row(
                 children: [
                   const Text(
                     "ANIFLIX",
                     style: TextStyles.appbarStyle,
                   ),
-                  const Spacer(),
+                  Spacer(),
                   IconButton(
-                      onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => const FavouritesScreen())),
-                      icon: const Icon(
-                        Icons.list_rounded,
-                        size: 28,
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.notifications,
                         color: Colors.red,
-                      )),
+                        size: 28,
+                      ))
                 ],
               ),
             ),
@@ -62,7 +60,7 @@ class _TabScreenState extends State<TabScreen> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.explore), label: "Explore"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.music_note_rounded), label: "Songs"),
+                icon: Icon(Icons.list_rounded), label: "My List"),
           ],
         ));
   }

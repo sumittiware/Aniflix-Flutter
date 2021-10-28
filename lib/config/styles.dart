@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class TextStyles {
   static const TextStyle appbarStyle = TextStyle(
       color: Colors.red,
-      fontSize: 28,
+      fontSize: 32,
       fontWeight: FontWeight.bold,
       fontFamily: "Bebas Neue");
 

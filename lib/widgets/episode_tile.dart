@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'package:aniflix/models/episode.dart';
-import 'package:aniflix/views/home/anime/videoscreen.dart';
 import 'package:flutter/material.dart';
 
 class EpisodeTile extends StatelessWidget {
@@ -11,16 +11,14 @@ class EpisodeTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: ListTile(
-        
-        tileColor: Colors.grey[900],
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => VideoScreen(
-                  title: episode.title,
-                  videoUrl: episode.videoUrl,
-                ))),
+
+        onTap: () => Navigator.pushNamed(context, '/videoscreen',
+            arguments: json.encode(
+                {'title': episode.title, 'videoUrl': episode.videoUrl})),
         leading: const Icon(
           Icons.play_arrow,
-          size: 40,
+         size: 35,
+          color: Colors.red,
         ),
         title: Text("Episode ${episode.number}"),
         subtitle: Text(

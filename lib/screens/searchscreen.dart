@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/providers/searchprovider.dart';
-
-import 'package:aniflix/views/home/tabs/search/allanime.dart';
+import 'package:aniflix/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
@@ -37,28 +38,43 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
                 child: TextFormField(
-                  controller: _searchController,
-                  obscureText: false,
-                  decoration: const InputDecoration(
-                    hintText: "Search",
-                    border: InputBorder.none,
-                    labelStyle: TextStyle(
-                      fontSize: 17,
-                      color: Colors.white,
+                    controller: _searchController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            _searchController.clear();
+                          },
+                          icon: Icon(Icons.clear)),
+                      hintText: "Search",
+                      border: InputBorder.none,
+                      labelStyle: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  onFieldSubmitted: (_) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AllAnimeScreen(
-                              query: _searchController.text,
-                            )));
-                  },
-                ),
+                    onFieldSubmitted: (_) => Navigator.pushNamed(
+                        context, '/allanimescreen',
+                        arguments: json.encode(
+                            {'query': _searchController.text, 'gnera': ""}))),
               )),
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            child: const Text("Genras", style: TextStyles.primaryTitle),
+            child: Row(
+              children: [
+                const Text("Genras", style: TextStyles.primaryTitle),
+                Spacer(),
+                IconButton(
+                    onPressed: () {
+                      showFilterBottomSheet(context);
+                    },
+                    icon: Icon(
+                      Icons.filter_list_rounded,
+                      size: 28,
+                    ))
+              ],
+            ),
           ),
           Expanded(
               child: Padding(
@@ -72,9 +88,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemCount: searchProvider.gneres.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AllAnimeScreen(
-                            genra: searchProvider.gneres[index]))),
+                    onTap: () => Navigator.pushNamed(context, '/allanimescreen',
+                        arguments: json.encode({
+                          'query': "",
+                          'gnera': searchProvider.gneres[index]
+                        })),
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 1),

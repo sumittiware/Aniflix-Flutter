@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:aniflix/config/shimmer.dart';
 import 'package:aniflix/providers/episodeprovider.dart';
-import 'package:aniflix/views/home/anime/widget/allepisodes.dart';
+import 'package:aniflix/screens/allepisodes.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'episode/episode_tile.dart';
+import 'episode_tile.dart';
 
 class EpisodesList extends StatefulWidget {
   final int id;
@@ -21,7 +22,7 @@ class EpisodesList extends StatefulWidget {
 
 class _EpisodesListState extends State<EpisodesList> {
   late EpisodeProvider episodesProvider;
-  bool loading = true;
+  bool loading = false;
   List<Widget> loader = List.generate(
       5,
       (index) => const LoaderWidget.rectangular(
@@ -33,21 +34,20 @@ class _EpisodesListState extends State<EpisodesList> {
   void initState() {
     super.initState();
     episodesProvider = Provider.of<EpisodeProvider>(context, listen: false);
-    episodesProvider
-        .fetchEpisodes(widget.id)
-        .then((_) => setState(() {
-              loading = false;
-            }))
-        .catchError((err) {
-      setState(() {
-        loader = [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(err.toString()),
-          )
-        ];
+    if (episodesProvider.episodes.isEmpty) {
+      setState(() => loading = true);
+      episodesProvider
+          .fetchEpisodes(widget.id)
+          .then((_) => setState(() => loading = false))
+          .catchError((err) {
+        setState(() => loader = [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(err.toString()),
+              )
+            ]);
       });
-    });
+    }
   }
 
   @override
@@ -65,11 +65,10 @@ class _EpisodesListState extends State<EpisodesList> {
                       child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: Colors.red)),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AllEpisodesPage(
-                                    id: widget.id, title: widget.title)));
-                          },
+                          onPressed: () => Navigator.pushNamed(
+                              context, '/allepisodescreen',
+                              arguments: json.encode(
+                                  {'id': widget.id, 'title': widget.title})),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(vertical: 16.0),
                             child: Text(

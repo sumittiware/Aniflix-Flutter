@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:aniflix/common/message.dart';
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/models/anime.dart';
 import 'package:aniflix/providers/wishlistprovider.dart';
-import 'package:aniflix/views/home/anime/detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,53 +32,57 @@ class DetailBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      Icons.close,
-                      size: 30,
-                    )),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    width: 150,
-                    height: 180,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                            image: NetworkImage(anime.image),
-                            fit: BoxFit.cover)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ConstrainedBox(
-                          constraints:
-                              BoxConstraints(maxWidth: size.width * 0.5),
-                          child: Text(
-                            anime.title,
-                            style: TextStyles.primaryTitle,
-                          ),
-                        ),
-                        Text(
-                          anime.year.toString(),
-                          style: TextStyles.secondaryTitle,
-                        ),
-                        Text(
-                          "Score : ${anime.score}",
-                        ),
-                      ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      constraints: BoxConstraints(
+                          maxWidth: size.width * 0.35, maxHeight: 180),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                              image: NetworkImage(anime.image),
+                              fit: BoxFit.cover)),
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ConstrainedBox(
+                            constraints:
+                                BoxConstraints(maxWidth: size.width * 0.4),
+                            child: Text(
+                              anime.title,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyles.primaryTitle,
+                            ),
+                          ),
+                          Text(
+                            anime.year.toString(),
+                            style: TextStyles.secondaryTitle,
+                          ),
+                          Text(
+                            "Score : ${anime.score}",
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.close_rounded,
+                          size: 25,
+                        )),
+                  ],
+                ),
               ),
               Row(
                 children: [
@@ -124,9 +129,12 @@ class DetailBottomSheet extends StatelessWidget {
                               onPrimary: Colors.white,
                               primary: Colors.red),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AnimeDetail(
-                                    id: anime.id, type: resulttype)));
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/detailscreen',
+                                arguments: json.encode({
+                                  'id': anime.id,
+                                  'type': resulttype.index,
+                                }));
                           },
                           icon: const Icon(Icons.play_arrow),
                           label: const Text("Watch Now")),
@@ -169,7 +177,7 @@ class SavedBottomSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(
@@ -235,9 +243,12 @@ class SavedBottomSheet extends StatelessWidget {
                               onPrimary: Colors.white,
                               primary: Colors.red),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AnimeDetail(
-                                    id: id, type: ResultType.saved)));
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/detailscreen',
+                                arguments: json.encode({
+                                  'id': id,
+                                  'type': ResultType.saved.index,
+                                }));
                           },
                           icon: const Icon(Icons.play_arrow),
                           label: const Text("Watch Now")),
