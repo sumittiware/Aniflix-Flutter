@@ -1,3 +1,5 @@
+import 'package:aniflix/common/constants.dart';
+
 class Anime {
   int id;
   String title;
@@ -7,6 +9,7 @@ class Anime {
   int year;
   int duration;
   String image;
+  String banner;
   String trailer;
   int score;
   List<dynamic> genres;
@@ -16,10 +19,11 @@ class Anime {
       this.title = "",
       this.description = "",
       this.episode = 0,
-      this.image = "",
+      this.image = placerholder,
       this.trailer = "",
       this.score = 0,
       this.season = 0,
+      this.banner = placerholder,
       required this.genres,
       this.year = 0,
       this.duration = 0});

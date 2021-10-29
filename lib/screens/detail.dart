@@ -104,13 +104,14 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
 
   @override
   void didPopNext() {
-    hideStatusBar();
+    resetStatusbar();
     controller.play();
     super.didPopNext();
   }
 
   @override
   void didPushNext() {
+    hideStatusBar();
     controller.pause();
     songProvider.pause();
     super.didPushNext();
@@ -140,9 +141,12 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                     SizedBox(height: padding.top),
                     Stack(
                       children: [
-                        (controller.value.hasError)
-                            ? Image.network(anime.image,
-                                fit: BoxFit.fitWidth,
+                        (controller.value.hasError || anime.trailer == "")
+                            ? Image.network(
+                                (anime.banner != "")
+                                    ? anime.banner
+                                    : anime.image,
+                                fit: BoxFit.cover,
                                 width: size.width,
                                 height: size.height * 0.3)
                             : YoutubePlayer(
@@ -182,6 +186,7 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                         width: size.width,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
                               margin: const EdgeInsets.all(8),
@@ -193,35 +198,28 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                                       image: NetworkImage(anime.image),
                                       fit: BoxFit.cover)),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                        maxWidth: size.width * 0.5),
-                                    child: Text(
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
                                       anime.title,
                                       style: TextStyles.primaryTitle,
                                     ),
-                                  ),
-                                  Text(
-                                    anime.year.toString(),
-                                    style: TextStyles.secondaryTitle,
-                                  ),
-                                  Text(
-                                    "Score : ${anime.score}",
-                                  ),
-                                  ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(
-                                          onPrimary: Colors.white,
-                                          primary: Colors.red),
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.play_arrow),
-                                      label: const Text("Watch Now"))
-                                ],
+                                    Text(
+                                      anime.year.toString(),
+                                      style: TextStyles.secondaryTitle,
+                                    ),
+                                    Text(
+                                      "Score : ${anime.score}",
+                                    ),
+                                  ],
+                                ),
                               ),
                             )
                           ],

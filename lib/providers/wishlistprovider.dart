@@ -72,7 +72,8 @@ class WishListProvider with ChangeNotifier {
         image: result['data']["cover_image"] ?? "",
         score: result['data']['score'] ?? 0,
         genres: result['data']['genres'] ?? [],
-        trailer: "",
+        banner: result['data']['banner_image'] ?? "",
+        trailer: result['data']['trailer_url'] ?? "",
         duration: result['data']['episode_duration'] ?? 0,
         year: result['data']['season_year'] ?? 0);
     return anime;

@@ -2,6 +2,7 @@ import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/screens/wishlist.dart';
 import 'package:aniflix/screens/homepage.dart';
 import 'package:aniflix/screens/searchscreen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class TabScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   int _currentIndex = 0;
+  final pageController = PageController(initialPage: 0);
   static List<Widget> _pages = [
     HomePage(),
     SearchScreen(),
@@ -22,10 +24,8 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     final padding = MediaQuery.of(context).padding;
     return Scaffold(
-        body: Column(
-          children: [
-            SizedBox(height: padding.top),
-            Container(
+        appBar: PreferredSize(
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Row(
@@ -45,11 +45,15 @@ class _TabScreenState extends State<TabScreen> {
                 ],
               ),
             ),
-            Expanded(child: _pages[_currentIndex]),
-          ],
+            preferredSize: Size.fromHeight(kToolbarHeight)),
+        body: PageView(
+          children: _pages,
+          controller: pageController,
+          physics: NeverScrollableScrollPhysics(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (val) {
+            pageController.jumpToPage(val);
             setState(() {
               _currentIndex = val;
             });

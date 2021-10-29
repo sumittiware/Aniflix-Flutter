@@ -42,6 +42,7 @@ class AnimeProvider with ChangeNotifier {
             genres: value['genres'] ?? [],
             trailer: value['trailer_url'] ?? "",
             year: value['season_year'] ?? 0,
+            banner: value['banner_image'] ?? "",
             duration: value['episode_duration'] ?? 0));
       });
       _datastatus = DataStatus.loaded;
@@ -52,12 +53,11 @@ class AnimeProvider with ChangeNotifier {
   }
 
   List<Anime> getAnimeByGnera(String gnera) {
-    print("here");
     List<Anime> result = [];
     for (var element in _animes) {
       if (element.genres.contains(gnera)) result.add(element);
     }
-
+    result.shuffle();
     return result;
   }
 

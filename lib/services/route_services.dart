@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 
 class CustomRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    FirebaseAnalytics().logEvent(
+        name: "screen_view", parameters: {"screen": "${settings.name},"});
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => TabScreen());

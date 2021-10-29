@@ -73,36 +73,73 @@ class _VideoScreenState extends State<VideoScreen> {
           const Center(
             child: Text("Error"),
           ),
-        Positioned.fill(child: GestureDetector(onTap: () {
-          setState(() {
-            hideTools = !hideTools;
-          });
-        })),
+        Positioned.fill(
+            child: GestureDetector(
+          onTap: () {
+            setState(() {
+              hideTools = !hideTools;
+            });
+          },
+          child: Container(
+            color: (hideTools) ? Colors.transparent : Colors.black38,
+          ),
+        )),
         if (!loading && !hideTools)
           Center(
-              child: Container(
-                  margin: const EdgeInsets.all(80),
-                  child: (_controller.value.isPlaying)
-                      ? IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _controller.pause();
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.pause,
-                            size: 70,
-                          ))
-                      : IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _controller.play();
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.play_arrow,
-                            size: 70,
-                          )))),
+              child: Row(
+            children: [
+              Container(
+                  width: size.width - 40,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.replay_10_rounded,
+                            size: 45,
+                          ),
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        (_controller.value.isPlaying)
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _controller.pause();
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.pause,
+                                  size: 45,
+                                ))
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _controller.play();
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.play_arrow,
+                                  size: 45,
+                                )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.forward_10_rounded,
+                            size: 45,
+                          ),
+                          color: Colors.white,
+                        ),
+                      ])),
+            ],
+          )),
         if (!hideTools)
           Positioned(
             left: 0,
@@ -115,18 +152,24 @@ class _VideoScreenState extends State<VideoScreen> {
                     "${_controller.value.position.inMinutes.remainder(60)}:${(_controller.value.position.inSeconds.remainder(60))}"),
                 SizedBox(
                   width: size.width * 0.9,
-                  child: Slider(
-                    value: (!loading)
-                        ? (_controller.value.position.inSeconds /
-                            _controller.value.duration.inSeconds)
-                        : 0,
-                    onChanged: (val) {
-                      _controller.seekTo(Duration(
-                          seconds: (val * _controller.value.duration.inSeconds)
-                              .floor()));
-                    },
-                    activeColor: Colors.red,
-                    inactiveColor: Colors.white,
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Colors.red,
+                        inactiveTrackColor: Colors.white,
+                        trackHeight: 2,
+                        thumbColor: Colors.red),
+                    child: Slider(
+                      value: (!loading)
+                          ? (_controller.value.position.inSeconds /
+                              _controller.value.duration.inSeconds)
+                          : 0,
+                      onChanged: (val) {
+                        _controller.seekTo(Duration(
+                            seconds:
+                                (val * _controller.value.duration.inSeconds)
+                                    .floor()));
+                      },
+                    ),
                   ),
                 ),
                 Text(

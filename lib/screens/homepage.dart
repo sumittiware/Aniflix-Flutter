@@ -25,7 +25,12 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       body: Stack(
         children: [
-          Image.network(banner.image, fit: BoxFit.fitWidth, width: size.width),
+          Image.network(
+            (banner.banner != "") ? banner.banner : banner.image,
+            fit: BoxFit.cover,
+            width: size.width,
+            height: size.height * 0.4,
+          ),
           SingleChildScrollView(
             child: Column(
               children: [

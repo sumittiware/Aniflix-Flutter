@@ -33,10 +33,10 @@ class DetailBottomSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       margin: const EdgeInsets.all(8),
@@ -65,9 +65,15 @@ class DetailBottomSheet extends StatelessWidget {
                               style: TextStyles.primaryTitle,
                             ),
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Text(
                             anime.year.toString(),
                             style: TextStyles.secondaryTitle,
+                          ),
+                          SizedBox(
+                            height: 8,
                           ),
                           Text(
                             "Score : ${anime.score}",
@@ -75,6 +81,7 @@ class DetailBottomSheet extends StatelessWidget {
                         ],
                       ),
                     ),
+                    Spacer(),
                     IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(
@@ -91,10 +98,14 @@ class DetailBottomSheet extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(10),
                               onPrimary: Colors.red,
                               shape: const RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.red)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4)),
+                                  side: BorderSide(
+                                    color: Colors.red,
+                                  )),
                               primary: Colors.transparent),
                           onPressed: () {
                             (wishlistProvider.isPresent(anime.id)
@@ -110,9 +121,12 @@ class DetailBottomSheet extends StatelessWidget {
                                 .catchError((err) => showCustomSnackBar(
                                     context, err.toString()));
                           },
-                          icon: Icon((wishlistProvider.isPresent(anime.id))
-                              ? Icons.remove_circle_outline
-                              : Icons.add),
+                          icon: Icon(
+                            (wishlistProvider.isPresent(anime.id))
+                                ? Icons.remove_circle_outline
+                                : Icons.add,
+                            size: 30,
+                          ),
                           label: Text((wishlistProvider.isPresent(anime.id))
                               ? "Remove"
                               : "Add to Wishlist")),
@@ -123,9 +137,13 @@ class DetailBottomSheet extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(10),
                               shape: const RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.red)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4)),
+                                  side: BorderSide(
+                                    color: Colors.red,
+                                  )),
                               onPrimary: Colors.white,
                               primary: Colors.red),
                           onPressed: () {
@@ -136,7 +154,7 @@ class DetailBottomSheet extends StatelessWidget {
                                   'type': resulttype.index,
                                 }));
                           },
-                          icon: const Icon(Icons.play_arrow),
+                          icon: const Icon(Icons.play_arrow, size: 30),
                           label: const Text("Watch Now")),
                     ),
                   )
