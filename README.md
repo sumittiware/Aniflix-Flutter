@@ -14,13 +14,13 @@ Netflix clone made with Flutter and [AniApi](https://www.aniapi.com) to explore 
 <img src="screenshots/home.jpg" height = 700/>
 <img src="screenshots/explore.jpg" height = 700/>
 <img src="screenshots/filters.jpg" height = 700/>
-<img src="screenshots/wishist.jpg" height = 700/>
+<img src="screenshots/wishlist.jpg" height = 700/>
 <img src="screenshots/gneres.jpg" height = 700/>
 <img src="screenshots/search.jpg" height = 700/>
 <img src="screenshots/detail.jpg" height = 700/>
 <img src="screenshots/detail2.jpg" height = 700/>
 <img src="screenshots/episodes.jpg" height = 700/>
 <img src="screenshots/songs.jpg" height = 700/>
-<img src="screenshots/stream.jpg" height = 700/>
+<img src="screenshots/stream.jpg" height = 400/>
 
 
