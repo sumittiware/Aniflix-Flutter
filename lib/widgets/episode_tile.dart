@@ -8,24 +8,20 @@ class EpisodeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-
-        onTap: () => Navigator.pushNamed(context, '/videoscreen',
-            arguments: json.encode(
-                {'title': episode.title, 'videoUrl': episode.videoUrl})),
-        leading: const Icon(
-          Icons.play_arrow,
-         size: 35,
-          color: Colors.red,
-        ),
-        title: Text("Episode ${episode.number}"),
-        subtitle: Text(
-          episode.title,
-          maxLines: 1,
-          overflow: TextOverflow.fade,
-        ),
+    return ListTile(
+      onTap: () => Navigator.pushNamed(context, '/videoscreen',
+          arguments: json
+              .encode({'title': episode.title, 'videoUrl': episode.videoUrl})),
+      leading: const Icon(
+        Icons.play_arrow,
+        size: 35,
+        color: Colors.red,
+      ),
+      title: Text("Episode ${episode.number}"),
+      subtitle: Text(
+        episode.title,
+        maxLines: 1,
+        overflow: TextOverflow.fade,
       ),
     );
   }
