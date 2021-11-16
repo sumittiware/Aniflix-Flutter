@@ -2,7 +2,7 @@
 
 Netflix clone made with Flutter and [AniApi](https://www.aniapi.com) to explore and stream anime
 
-<br>-> Flutter Providers are used for the statemanagement in the overall app.
+<br>-> Flutter Providers are used for the state management in the overall app.
 <br>-> Pagination for implementing infinite scrolling and makeing user experience better.
 <br>-> Hive box(Flutter NoSql database) is used to save the user related information in local storage.
 <br>-> Flutter video player is used to stream anime episodes.
@@ -23,13 +23,4 @@ Netflix clone made with Flutter and [AniApi](https://www.aniapi.com) to explore 
 <img src="screenshots/songs.jpg" height = 700/>
 <img src="screenshots/stream.jpg" height = 700/>
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
