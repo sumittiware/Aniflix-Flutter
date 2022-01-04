@@ -6,7 +6,7 @@ Netflix clone made with Flutter and [AniApi](https://www.aniapi.com) to explore 
 <br>-> Pagination for implementing infinite scrolling and makeing user experience better.
 <br>-> Hive box(Flutter NoSql database) is used to save the user related information in local storage.
 <br>-> Flutter video player is used to stream anime episodes.
-<br>-> Flutter audio player is used top play the demo audio clip and then user may switch to spotify to listen full song.
+<br>-> Flutter audio player is used to play the demo audio clip and then user may switch to spotify to listen full song.
 <br>-> Firebase anylatics is used to keep track of the user actions and make better future updates accordingly.
 
 ## Screenshots
