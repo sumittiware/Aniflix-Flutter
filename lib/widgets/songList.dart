@@ -15,6 +15,7 @@ class SongList extends StatefulWidget {
 class _SongListState extends State<SongList> {
   late SongProvider songProvider;
   bool loading = false;
+  
   List<Widget> loader = List.generate(
       5,
       (index) => LoaderWidget.rectangular(
