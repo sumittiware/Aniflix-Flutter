@@ -23,6 +23,7 @@ void setStatusBarColor() {
 }
 
 void hideStatusBar() {
+  print("Hiding status bar");
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 }
 
