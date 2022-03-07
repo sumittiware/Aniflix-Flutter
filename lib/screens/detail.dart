@@ -10,10 +10,9 @@ import 'package:aniflix/providers/episodeprovider.dart';
 import 'package:aniflix/providers/searchprovider.dart';
 import 'package:aniflix/providers/songprovider.dart';
 import 'package:aniflix/providers/wishlistprovider.dart';
-import 'package:aniflix/widgets/episodeslist.dart';
-import 'package:aniflix/widgets/songList.dart';
+import 'package:aniflix/widgets/episodes_list.dart';
+import 'package:aniflix/widgets/song_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -291,9 +290,9 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                               showEpisodes = true;
                             }),
                             child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               alignment: Alignment.center,
-                              child: Text(
+                              child: const Text(
                                 "Episodes",
                                 style: TextStyles.secondaryTitle2,
                               ),
@@ -312,9 +311,9 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                               showEpisodes = false;
                             }),
                             child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               alignment: Alignment.center,
-                              child: Text(
+                              child: const Text(
                                 "Songs",
                                 style: TextStyles.secondaryTitle2,
                               ),
@@ -333,7 +332,7 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
                     (showEpisodes)
                         ? EpisodesList(id: anime.id, title: anime.title)
                         : SongList(animeId: anime.id),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
                   ],

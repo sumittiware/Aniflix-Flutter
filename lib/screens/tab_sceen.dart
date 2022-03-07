@@ -1,8 +1,7 @@
 import 'package:aniflix/config/styles.dart';
-import 'package:aniflix/screens/wishlist.dart';
-import 'package:aniflix/screens/homepage.dart';
-import 'package:aniflix/screens/searchscreen.dart';
-import 'package:flutter/gestures.dart';
+import 'package:aniflix/screens/favourites_screen.dart';
+import 'package:aniflix/screens/home_page.dart';
+import 'package:aniflix/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
 class TabScreen extends StatefulWidget {
@@ -15,14 +14,13 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   int _currentIndex = 0;
   final pageController = PageController(initialPage: 0);
-  static List<Widget> _pages = [
-    HomePage(),
-    SearchScreen(),
-    FavouritesScreen(),
+  static final List<Widget> _pages = [
+    const HomePage(),
+    const SearchScreen(),
+    const FavouritesScreen(),
   ];
   @override
   Widget build(BuildContext context) {
-    final padding = MediaQuery.of(context).padding;
     return Scaffold(
         appBar: PreferredSize(
             child: Container(
@@ -34,10 +32,10 @@ class _TabScreenState extends State<TabScreen> {
                     "ANIFLIX",
                     style: TextStyles.appbarStyle,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                       onPressed: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.notifications,
                         color: Colors.red,
                         size: 28,
@@ -45,11 +43,11 @@ class _TabScreenState extends State<TabScreen> {
                 ],
               ),
             ),
-            preferredSize: Size.fromHeight(kToolbarHeight)),
+            preferredSize: const Size.fromHeight(kToolbarHeight)),
         body: PageView(
           children: _pages,
           controller: pageController,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (val) {

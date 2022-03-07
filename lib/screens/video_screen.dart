@@ -88,7 +88,7 @@ class _VideoScreenState extends State<VideoScreen> {
           Center(
               child: Row(
             children: [
-              Container(
+              SizedBox(
                   width: size.width - 40,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -96,13 +96,13 @@ class _VideoScreenState extends State<VideoScreen> {
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.replay_10_rounded,
                             size: 45,
                           ),
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         (_controller.value.isPlaying)
@@ -126,12 +126,12 @@ class _VideoScreenState extends State<VideoScreen> {
                                   Icons.play_arrow,
                                   size: 45,
                                 )),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.forward_10_rounded,
                             size: 45,
                           ),

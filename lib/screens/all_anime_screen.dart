@@ -4,7 +4,7 @@ import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/shimmer.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/providers/searchprovider.dart';
-import 'package:aniflix/widgets/animewidget.dart';
+import 'package:aniflix/widgets/anime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

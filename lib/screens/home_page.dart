@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/providers/bannerprovider.dart';
-import 'package:aniflix/widgets/animebygnera.dart';
+import 'package:aniflix/widgets/anime_by_gnera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

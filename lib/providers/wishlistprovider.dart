@@ -10,7 +10,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class WishListProvider with ChangeNotifier {
-  List<WishList> _wishlist = [];
+  final List<WishList> _wishlist = [];
   DataStatus _dataStatus = DataStatus.loading;
 
   WishListProvider() {
