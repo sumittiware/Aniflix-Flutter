@@ -18,7 +18,7 @@ class _SongListState extends State<SongList> {
   
   List<Widget> loader = List.generate(
       5,
-      (index) => LoaderWidget.rectangular(
+      (index) => const LoaderWidget.rectangular(
             height: 50,
             borderRadius: Radius.circular(0),
           ));
@@ -36,7 +36,7 @@ class _SongListState extends State<SongList> {
         setState(() {
           loader = [
             Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Text(err.toString()),
             )
           ];

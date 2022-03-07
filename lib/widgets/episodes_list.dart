@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:aniflix/config/shimmer.dart';
 import 'package:aniflix/providers/episodeprovider.dart';
-import 'package:aniflix/screens/allepisodes.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

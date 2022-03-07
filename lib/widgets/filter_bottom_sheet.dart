@@ -20,26 +20,26 @@ class FilterBottomSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text(
                   "Filters",
                   style: TextStyles.primaryTitle,
                 ),
               ),
-              Text(
+              const Text(
                 "Format",
                 style: TextStyles.secondaryTitle2,
               ),
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Wrap(
                   children: List.generate(
                       searchProvider.format.length,
                       (index) => GestureDetector(
                             onTap: () => searchProvider.setFormatFilter(index),
                             child: Container(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 child: Text(
                                   searchProvider.format[index],
                                   style: TextStyle(
@@ -52,19 +52,19 @@ class FilterBottomSheet extends StatelessWidget {
                           )),
                 ),
               ),
-              Text(
+              const Text(
                 "Season Period",
                 style: TextStyles.secondaryTitle2,
               ),
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Wrap(
                   children: List.generate(
                       searchProvider.period.length,
                       (index) => GestureDetector(
                             onTap: () => searchProvider.setPeriodFilter(index),
                             child: Container(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 child: Text(
                                   searchProvider.period[index],
                                   style: TextStyle(
@@ -81,12 +81,12 @@ class FilterBottomSheet extends StatelessWidget {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(
+                  child: const Text(
                     "Apply",
                     style: TextStyles.secondaryTitle2,
                   ),
                   style: TextButton.styleFrom(
-                      padding: EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       backgroundColor: Colors.red,
                       primary: Colors.white),
                 ),
@@ -118,23 +118,23 @@ showFilterBottomSheet(BuildContext context) {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Row(
                         children: [
-                          Text(
+                          const Text(
                             "Filters",
                             style: TextStyles.primaryTitle,
                           ),
-                          Spacer(),
+                          const Spacer(),
                           IconButton(
                               onPressed: () => Navigator.pop(context),
-                              icon: Icon(Icons.close))
+                              icon: const Icon(Icons.close))
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Format",
                       style: TextStyles.secondaryTitle2,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: Wrap(
                         children: List.generate(
                             searchProvider.format.length,
@@ -142,7 +142,7 @@ showFilterBottomSheet(BuildContext context) {
                                   onTap: () =>
                                       searchProvider.setFormatFilter(index),
                                   child: Container(
-                                      padding: EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       child: Text(
                                         searchProvider.format[index],
                                         style: TextStyle(
@@ -156,12 +156,12 @@ showFilterBottomSheet(BuildContext context) {
                                 )),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Season Period",
                       style: TextStyles.secondaryTitle2,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: Wrap(
                         children: List.generate(
                             searchProvider.period.length,
@@ -169,7 +169,7 @@ showFilterBottomSheet(BuildContext context) {
                                   onTap: () =>
                                       searchProvider.setPeriodFilter(index),
                                   child: Container(
-                                      padding: EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       child: Text(
                                         searchProvider.period[index],
                                         style: TextStyle(

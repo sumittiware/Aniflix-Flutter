@@ -13,7 +13,7 @@ class SongProvider with ChangeNotifier {
   late int lastPage = 1;
   late int currentPage = 0;
   int currentPlaying = -1;
-  AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool playing = false;
 
   SongProvider() {

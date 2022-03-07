@@ -1,15 +1,14 @@
 import 'dart:convert';
 
 import 'package:aniflix/config/enum.dart';
-import 'package:aniflix/screens/allanime.dart';
-import 'package:aniflix/screens/allepisodes.dart';
+import 'package:aniflix/screens/all_anime_screen.dart';
+import 'package:aniflix/screens/all_episodes_page.dart';
 import 'package:aniflix/screens/detail.dart';
-import 'package:aniflix/screens/homepage.dart';
-import 'package:aniflix/screens/searchscreen.dart';
-import 'package:aniflix/screens/tabsceen.dart';
-import 'package:aniflix/screens/videoscreen.dart';
-import 'package:aniflix/screens/wishlist.dart';
-import 'package:aniflix/services/analytics_services.dart';
+import 'package:aniflix/screens/home_page.dart';
+import 'package:aniflix/screens/search_screen.dart';
+import 'package:aniflix/screens/tab_sceen.dart';
+import 'package:aniflix/screens/video_screen.dart';
+import 'package:aniflix/screens/favourites_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
@@ -19,13 +18,13 @@ class CustomRoutes {
         name: "screen_view", parameters: {"screen": "${settings.name},"});
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => TabScreen());
+        return MaterialPageRoute(builder: (_) => const TabScreen());
       case '/homescreen':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case '/searchscreen':
-        return MaterialPageRoute(builder: (_) => SearchScreen());
+        return MaterialPageRoute(builder: (_) => const SearchScreen());
       case '/wishlist':
-        return MaterialPageRoute(builder: (_) => FavouritesScreen());
+        return MaterialPageRoute(builder: (_) => const FavouritesScreen());
       case '/detailscreen':
         final arge = json.decode(settings.arguments.toString());
         final id = arge['id'];
@@ -57,7 +56,7 @@ class CustomRoutes {
         return MaterialPageRoute(
             builder: (_) => Scaffold(
                   appBar: AppBar(),
-                  body: Center(
+                  body: const Center(
                     child: Text("Page not found"),
                   ),
                 ));

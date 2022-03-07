@@ -1,7 +1,7 @@
 import 'package:aniflix/models/wishlist.dart';
 import 'package:aniflix/providers/wishlistprovider.dart';
 import 'package:aniflix/services/analytics_services.dart';
-import 'package:aniflix/services/route_services.dart';
+import 'package:aniflix/services/custom_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';

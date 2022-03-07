@@ -28,8 +28,9 @@ class AnimeProvider with ChangeNotifier {
       final response = await http.get(url);
 
       final result = json.decode(response.body);
-      if (result['status_code'] != 200)
+      if (result['status_code'] != 200) {
         throw result['message'] ?? "Something went wrong!!";
+      }
       result['data']['documents'].forEach((value) {
         _animes.add(Anime(
             id: value["id"] ?? 0,

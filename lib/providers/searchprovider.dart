@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/models/anime.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class SearchProvider with ChangeNotifier {
   final List<Anime> _searchResults = [];
   final List<Anime> _gneraResult = [];
   List<dynamic> _gneres = [];
-  List<String> _format = ["TV", "TV short", "Movie", "Special", "Ova"];
-  List<String> _period = ["Winter", "Spring", "Summer", "Fall"];
-  List<int> _selectedFormat = [];
-  List<int> _selectedPeriod = [];
+  final List<String> _format = ["TV", "TV short", "Movie", "Special", "Ova"];
+  final List<String> _period = ["Winter", "Spring", "Summer", "Fall"];
+  final List<int> _selectedFormat = [];
+  final List<int> _selectedPeriod = [];
 
   SearchProvider() {
     fetchGneres();
@@ -42,7 +42,9 @@ class SearchProvider with ChangeNotifier {
     (!_selectedPeriod.contains(index))
         ? _selectedPeriod.add(index)
         : _selectedPeriod.remove(index);
-    print(_selectedPeriod);
+    if (kDebugMode) {
+      print(_selectedPeriod);
+    }
     notifyListeners();
   }
 
@@ -76,8 +78,9 @@ class SearchProvider with ChangeNotifier {
     try {
       final response = await http.get(url);
       final result = json.decode(response.body);
-      if (result['status_code'] != 200)
+      if (result['status_code'] != 200) {
         throw result['message'] ?? "Something went wrong!!";
+      }
       result['data']['documents'].forEach((value) {
         _searchResults.add(Anime(
             id: value["id"] ?? 0,
@@ -113,8 +116,9 @@ class SearchProvider with ChangeNotifier {
       final response = await http.get(url);
 
       final result = json.decode(response.body);
-      if (result['status_code'] != 200)
+      if (result['status_code'] != 200) {
         throw result['message'] ?? "Something went wrong!!";
+      }
       result['data']['documents'].forEach((value) {
         _gneraResult.add(Anime(
             id: value["id"] ?? 0,

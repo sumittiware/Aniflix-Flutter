@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class EpisodeProvider with ChangeNotifier {
-  List<Episode> _eposides = [];
+  final List<Episode> _eposides = [];
   bool _isFetched = false;
   late int lastPage = 1;
   late int currentPage = 0;

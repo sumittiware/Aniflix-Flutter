@@ -45,10 +45,10 @@ class _SearchScreenState extends State<SearchScreen> {
                           onPressed: () {
                             _searchController.clear();
                           },
-                          icon: Icon(Icons.clear)),
+                          icon: const Icon(Icons.clear)),
                       hintText: "Search",
                       border: InputBorder.none,
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         fontSize: 17,
                         color: Colors.white,
                       ),
@@ -64,12 +64,12 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Row(
               children: [
                 const Text("Genras", style: TextStyles.primaryTitle),
-                Spacer(),
+                const Spacer(),
                 IconButton(
                     onPressed: () {
                       showFilterBottomSheet(context);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.filter_list_rounded,
                       size: 28,
                     ))

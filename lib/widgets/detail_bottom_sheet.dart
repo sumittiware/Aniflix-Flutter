@@ -65,14 +65,14 @@ class DetailBottomSheet extends StatelessWidget {
                               style: TextStyles.primaryTitle,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           Text(
                             anime.year.toString(),
                             style: TextStyles.secondaryTitle,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           Text(
@@ -81,7 +81,7 @@ class DetailBottomSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(
