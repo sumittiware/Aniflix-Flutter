@@ -43,11 +43,12 @@ class FilterBottomSheet extends StatelessWidget {
                                 child: Text(
                                   searchProvider.format[index],
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      color: (searchProvider.selectedFormat
-                                              .contains(index)
-                                          ? Colors.red
-                                          : Colors.white)),
+                                    fontSize: 16,
+                                    color: (searchProvider.selectedFormat
+                                            .contains(index)
+                                        ? Colors.red
+                                        : Colors.white),
+                                  ),
                                 )),
                           )),
                 ),

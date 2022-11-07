@@ -22,32 +22,15 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  const Text(
-                    "ANIFLIX",
-                    style: TextStyles.appbarStyle,
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.notifications,
-                        color: Colors.red,
-                        size: 28,
-                      ))
-                ],
-              ),
+        body: Stack(
+          children: [
+            PageView(
+              children: _pages,
+              controller: pageController,
+              physics: const NeverScrollableScrollPhysics(),
             ),
-            preferredSize: const Size.fromHeight(kToolbarHeight)),
-        body: PageView(
-          children: _pages,
-          controller: pageController,
-          physics: const NeverScrollableScrollPhysics(),
+            _buildAppBar(),
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (val) {
@@ -58,12 +41,57 @@ class _TabScreenState extends State<TabScreen> {
           },
           currentIndex: _currentIndex,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.explore), label: "Explore"),
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.list_rounded), label: "My List"),
+              icon: Icon(Icons.explore),
+              label: "Explore",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_rounded),
+              label: "My List",
+            ),
           ],
         ));
+  }
+
+  Widget _buildAppBar() {
+    final mediaquery = MediaQuery.of(context);
+    return Positioned(
+      top: 0,
+      child: Container(
+        height: kToolbarHeight + mediaquery.padding.top,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.only(
+          bottom: 8,
+          left: 8,
+          right: 8,
+          top: mediaquery.padding.top,
+        ),
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.4),
+        ),
+        child: Row(
+          children: [
+            const Text(
+              "ANIFLIX",
+              style: TextStyles.appbarStyle,
+            ),
+            const Spacer(),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.notifications,
+                color: Colors.red,
+                size: 28,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

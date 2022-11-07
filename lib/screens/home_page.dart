@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:aniflix/config/enum.dart';
-import 'package:aniflix/config/styles.dart';
-import 'package:aniflix/providers/bannerprovider.dart';
+import 'package:aniflix/config/shimmer.dart';
+import 'package:aniflix/providers/animeprovider.dart';
 import 'package:aniflix/widgets/anime_by_gnera.dart';
+import 'package:aniflix/widgets/button.dart';
+import 'package:aniflix/widgets/detail_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,102 +18,115 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final size = MediaQuery.of(context).size;
-    final banner = Provider.of<BannerProvider>(context).getBanner();
+
     return Scaffold(
-      body: Stack(
+      body: ListView(
         children: [
-          Image.network(
-            (banner.banner != "") ? banner.banner : banner.image,
-            fit: BoxFit.cover,
-            width: size.width,
-            height: size.height * 0.4,
+          _buildBanner(),
+          const AnimesByGenra(
+            gnera: "Action",
+            id: 1,
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: size.height * 0.40,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Colors.transparent, Colors.black],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter),
-                  ),
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    padding: const EdgeInsets.all(12),
-                    width: size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                banner.title,
-                                style: TextStyles.secondaryTitle,
-                              ),
-                              Text(banner.genres
-                                  .sublist(0, min(3, banner.genres.length))
-                                  .join(", "))
-                            ],
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                onPrimary: Colors.white, primary: Colors.red),
-                            onPressed: () => Navigator.pushNamed(
-                                context, '/detailscreen',
-                                arguments: json.encode({
-                                  'id': 0,
-                                  'type': ResultType.banner.index
-                                })),
-                            icon: const Icon(Icons.play_arrow),
-                            label: const Text("Watch Now"))
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  width: size.width,
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 12),
-                        child: const Text("Discover",
-                            style: TextStyles.primaryTitle),
-                      ),
-                      const AnimesByGenra(
-                        gnera: "Action",
-                      ),
-                      const AnimesByGenra(
-                        gnera: "Adventure",
-                      ),
-                      const AnimesByGenra(
-                        gnera: "Romance",
-                      ),
-                      const AnimesByGenra(
-                        gnera: "Sci-Fi",
-                      ),
-                      const AnimesByGenra(
-                        gnera: "Comedy",
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
+          const AnimesByGenra(
+            gnera: "Adventure",
+            id: 2,
+          ),
+          const AnimesByGenra(
+            gnera: "Romance",
+            id: 22,
+          ),
+          const AnimesByGenra(
+            gnera: "Sci-Fi",
+            id: 22,
+          ),
+          const AnimesByGenra(
+            gnera: "Comedy",
+            id: 4,
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBanner() {
+    final size = MediaQuery.of(context).size;
+    return Consumer<AnimeProvider>(
+      builder: (_, animeProvider, __) {
+        return animeProvider.bannerAnime == null
+            ? const BannerLoader()
+            : Stack(
+                children: [
+                  Container(
+                      height: size.height * 0.5,
+                      width: size.width,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            animeProvider.bannerAnime!.images!.largeImageUrl!,
+                          ),
+                          fit: BoxFit.fitWidth,
+                        ),
+                      )),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      alignment: Alignment.center,
+                      height: 80,
+                      width: size.width,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.black45,
+                              Colors.black87,
+                              Colors.black87,
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: [
+                              0.0,
+                              0.15,
+                              0.3,
+                              0.45,
+                            ]),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomButtons().iconButton(
+                            icon: Icons.add,
+                            onTap: () {},
+                            label: "My List",
+                          ),
+                          CustomButtons().textButton(
+                            label: 'Play',
+                            onTap: () {},
+                            icon: Icons.play_arrow,
+                          ),
+                          CustomButtons().iconButton(
+                            icon: Icons.info_outline,
+                            onTap: () {
+                              showBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return DetailBottomSheet(
+                                    anime: animeProvider.bannerAnime!,
+                                  );
+                                },
+                              );
+                            },
+                            label: "Info",
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+      },
     );
   }
 

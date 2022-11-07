@@ -48,7 +48,7 @@ class WishListProvider with ChangeNotifier {
     }
   }
 
-  Future<void> removeFromList(int id) async {
+  Future<void> removeFromList(String id) async {
     try {
       final box = Hive.box<WishList>('wishlist');
       await box.delete(id);
@@ -60,22 +60,6 @@ class WishListProvider with ChangeNotifier {
   }
 
   Future<Anime> fetchById(int id) async {
-    final url = Uri.parse("https://api.aniapi.com/v1/anime/$id");
-    final response = await http.get(url);
-    final result = json.decode(response.body);
-    final anime = Anime(
-        id: result['data']["id"] ?? 0,
-        title: result['data']['titles']['en'] ?? "",
-        description: result['data']['descriptions']['en'] ?? "",
-        season: result['data']['season_period'] ?? 0,
-        episode: result['data']['episodes_count'] ?? 0,
-        image: result['data']["cover_image"] ?? "",
-        score: result['data']['score'] ?? 0,
-        genres: result['data']['genres'] ?? [],
-        banner: result['data']['banner_image'] ?? "",
-        trailer: result['data']['trailer_url'] ?? "",
-        duration: result['data']['episode_duration'] ?? 0,
-        year: result['data']['season_year'] ?? 0);
-    return anime;
+    return Anime();
   }
 }

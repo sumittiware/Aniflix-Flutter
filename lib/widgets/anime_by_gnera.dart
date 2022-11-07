@@ -8,7 +8,12 @@ import 'package:provider/provider.dart';
 
 class AnimesByGenra extends StatefulWidget {
   final String gnera;
-  const AnimesByGenra({Key? key, required this.gnera}) : super(key: key);
+  final int id;
+  const AnimesByGenra({
+    Key? key,
+    required this.gnera,
+    required this.id,
+  }) : super(key: key);
 
   @override
   _AnimesByGenraState createState() => _AnimesByGenraState();
@@ -21,7 +26,7 @@ class _AnimesByGenraState extends State<AnimesByGenra>
     super.build(context);
     final size = MediaQuery.of(context).size;
     final animesProvider = Provider.of<AnimeProvider>(context);
-    final gnerasAnime = animesProvider.getAnimeByGnera(widget.gnera);
+    final gnerasAnime = animesProvider.getAnimeByGnera(widget.id);
     return Container(
       width: size.width,
       padding: const EdgeInsets.all(8),
@@ -32,7 +37,7 @@ class _AnimesByGenraState extends State<AnimesByGenra>
             padding: const EdgeInsets.only(left: 4),
             child: Text(
               widget.gnera,
-              style: TextStyles.secondaryTitle,
+              style: TextStyles.primaryTitle,
             ),
           ),
           SizedBox(
@@ -45,9 +50,12 @@ class _AnimesByGenraState extends State<AnimesByGenra>
                 itemBuilder: (context, index) {
                   return (animesProvider.datastatus == DataStatus.loading)
                       ? LoaderWidget.rectangular(
-                          height: size.height * 0.22, width: size.width * 0.32)
+                          height: size.height * 0.22,
+                          width: size.width * 0.32,
+                        )
                       : AnimeWidget(
-                          anime: gnerasAnime[index], resulType: ResultType.all);
+                          anime: gnerasAnime[index],
+                        );
                 }),
           )
         ],

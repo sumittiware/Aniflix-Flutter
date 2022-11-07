@@ -1,29 +1,33 @@
 import 'dart:convert';
 
-import 'package:aniflix/common/message.dart';
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/models/anime.dart';
 import 'package:aniflix/providers/wishlistprovider.dart';
+import 'package:aniflix/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DetailBottomSheet extends StatelessWidget {
   final Anime anime;
-  final ResultType resulttype;
-  const DetailBottomSheet(
-      {Key? key, required this.anime, required this.resulttype})
-      : super(key: key);
+
+  const DetailBottomSheet({
+    Key? key,
+    required this.anime,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final wishlistProvider = Provider.of<WishListProvider>(context);
+    // final wishlistProvider = Provider.of<WishListProvider>(context);
     return BottomSheet(
       backgroundColor: Colors.grey.shade900,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
       builder: (BuildContext context) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -36,135 +40,133 @@ class DetailBottomSheet extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      constraints: BoxConstraints(
-                          maxWidth: size.width * 0.35, maxHeight: 180),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          image: DecorationImage(
-                              image: NetworkImage(anime.image),
-                              fit: BoxFit.cover)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          ConstrainedBox(
-                            constraints:
-                                BoxConstraints(maxWidth: size.width * 0.4),
-                            child: Text(
-                              anime.title,
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyles.primaryTitle,
+                    _buildImage(size),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            ConstrainedBox(
+                              constraints:
+                                  BoxConstraints(maxWidth: size.width * 0.4),
+                              child: Text(
+                                anime.title!,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyles.primaryTitle,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            anime.year.toString(),
-                            style: TextStyles.secondaryTitle,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "Score : ${anime.score}",
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              (anime.type == 'Movie')
+                                  ? 'Movie'
+                                  : '${anime.year ?? ''}  ${anime.episodes} Episodes',
+                              style: TextStyles.secondaryTitle,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              anime.background ?? '',
+                              maxLines: 3,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const Spacer(),
-                    IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.close_rounded,
-                          size: 25,
-                        )),
+                    CustomButtons().iconButton(
+                      icon: Icons.close,
+                      onTap: () => Navigator.pop(context),
+                    ),
                   ],
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                              onPrimary: Colors.red,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(4)),
-                                  side: BorderSide(
-                                    color: Colors.red,
-                                  )),
-                              primary: Colors.transparent),
-                          onPressed: () {
-                            (wishlistProvider.isPresent(anime.id)
-                                    ? wishlistProvider
-                                        .removeFromList(anime.id)
-                                        .then((value) => showCustomSnackBar(
-                                            context, "Removed!!"))
-                                    : wishlistProvider
-                                        .addToWishlist(
-                                            anime.id, anime.title, anime.image)
-                                        .then((value) => showCustomSnackBar(
-                                            context, "Added to Wishlist!!")))
-                                .catchError((err) => showCustomSnackBar(
-                                    context, err.toString()));
-                          },
-                          icon: Icon(
-                            (wishlistProvider.isPresent(anime.id))
-                                ? Icons.remove_circle_outline
-                                : Icons.add,
-                            size: 30,
-                          ),
-                          label: Text((wishlistProvider.isPresent(anime.id))
-                              ? "Remove"
-                              : "Add to Wishlist")),
-                    ),
+                  CustomButtons().iconButton(
+                    icon: Icons.play_circle,
+                    onTap: () {},
+                    label: 'Play',
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(4)),
-                                  side: BorderSide(
-                                    color: Colors.red,
-                                  )),
-                              onPrimary: Colors.white,
-                              primary: Colors.red),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/detailscreen',
-                                arguments: json.encode({
-                                  'id': anime.id,
-                                  'type': resulttype.index,
-                                }));
-                          },
-                          icon: const Icon(Icons.play_arrow, size: 30),
-                          label: const Text("Watch Now")),
-                    ),
-                  )
+                  CustomButtons().iconButton(
+                    icon: Icons.download_for_offline,
+                    onTap: () {},
+                    label: 'Download',
+                  ),
+                  CustomButtons().iconButton(
+                    icon: Icons.add_circle_sharp,
+                    onTap: () {},
+                    label: 'My List',
+                  ),
+                  CustomButtons().iconButton(
+                    icon: Icons.share_sharp,
+                    onTap: () {},
+                    label: 'Share',
+                  ),
                 ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                child: Divider(),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    '/detailscreen',
+                    arguments: json.encode(
+                      {
+                        'id': anime.malId,
+                        'type': 0,
+                      },
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.info_outline),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Episodes & Info'),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_ios_sharp)
+                    ],
+                  ),
+                ),
               )
             ],
           ),
         );
       },
       onClosing: () {},
+    );
+  }
+
+  Widget _buildImage(size) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      constraints: BoxConstraints(
+        maxWidth: size.width * 0.24,
+        maxHeight: 120,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        image: DecorationImage(
+          image: NetworkImage(
+            anime.images!.imageUrl!,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }
@@ -240,11 +242,11 @@ class SavedBottomSheet extends StatelessWidget {
                               side: BorderSide(color: Colors.red)),
                           primary: Colors.transparent),
                       onPressed: () {
-                        wishlistProvider.removeFromList(id).then((value) {
-                          showCustomSnackBar(context, "Removed!!");
-                          Navigator.pop(context);
-                        }).catchError((err) =>
-                            showCustomSnackBar(context, err.toString()));
+                        // wishlistProvider.removeFromList(id).then((value) {
+                        //   showCustomSnackBar(context, "Removed!!");
+                        //   Navigator.pop(context);
+                        // }).catchError((err) =>
+                        //     showCustomSnackBar(context, err.toString()));
                       },
                       icon: const Icon(Icons.remove_circle_outline),
                       label: const Text("Remove"),

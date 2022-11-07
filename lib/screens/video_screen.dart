@@ -14,6 +14,8 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
+  String testUrl = "https:/goload.io/streaming.php?id=OTczNTE";
+
   late VideoPlayerController _controller;
   bool loading = true;
   String error = "";
@@ -23,8 +25,9 @@ class _VideoScreenState extends State<VideoScreen> {
   void initState() {
     super.initState();
     hideStatusBar();
-    _controller = VideoPlayerController.network(widget.videoUrl)
+    _controller = VideoPlayerController.network(testUrl)
       ..addListener(() {
+        // if(_controller.)
         if (_controller.value.isBuffering) {
           setState(() {
             loading = true;
@@ -44,7 +47,10 @@ class _VideoScreenState extends State<VideoScreen> {
           loading = false;
         });
         _controller.play();
-      }).catchError((err) {});
+      }).catchError((err) {
+        print("ERROR : ${err.toString()}");
+        // print(err.toString());
+      });
     setLandscapeOrientation();
   }
 

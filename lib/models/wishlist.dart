@@ -10,5 +10,9 @@ class WishList {
   @HiveField(2)
   String imageUrl;
 
-  WishList({required this.id, required this.title, required this.imageUrl});
+  WishList({
+    required this.id,
+    required this.title,
+    required this.imageUrl,
+  });
 }

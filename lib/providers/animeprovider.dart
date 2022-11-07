@@ -1,68 +1,118 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/models/anime.dart';
+import 'package:aniflix/services/api_services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class AnimeProvider with ChangeNotifier {
+  final _apiService = ApiService();
+  Anime? _bannerAnime;
   final List<Anime> _animes = [];
+  final List<Anime> _recommended = [];
   final Set<int> _wishlist = {};
+
+  // pagination utils
+  int _currentPage = 0;
+  int _lastPage = -1;
 
   DataStatus _datastatus = DataStatus.loading;
 
   AnimeProvider() {
     fetchAnimes();
+    fetchBanner();
+  }
+
+  setStatus(DataStatus status) {
+    _datastatus = status;
+    notifyListeners();
   }
 
   DataStatus get datastatus => _datastatus;
   List<Anime> get animes => [..._animes];
-
+  List<Anime> get recommended => [..._recommended];
+  Anime? get bannerAnime => _bannerAnime;
   bool isSaved(int id) => _wishlist.contains(id);
 
   Future<void> fetchAnimes() async {
-    int page = Random().nextInt(30);
-    final url = Uri.parse("https://api.aniapi.com/v1/anime?page=${page + 1}");
-    try {
-      final response = await http.get(url);
+    setStatus(DataStatus.loading);
+    Map<String, dynamic> data = await _apiService.get(
+      endpoint: '/top/anime',
+    );
 
-      final result = json.decode(response.body);
-      if (result['status_code'] != 200) {
-        throw result['message'] ?? "Something went wrong!!";
+    if (data['current_page'] != null) {
+      _currentPage = data['current_page'];
+    }
+    if (data['last_page'] != null) {
+      _lastPage = data['last_page'];
+    }
+
+    for (var ele in data['data']) {
+      _animes.add(
+        Anime.fromJson(ele),
+      );
+    }
+    setStatus(DataStatus.loaded);
+  }
+
+  Future<void> fetchBanner() async {
+    final data = await _apiService.get(
+      endpoint: '/random/anime/',
+    );
+    _bannerAnime = Anime.fromJson(
+      data['data'],
+    );
+    notifyListeners();
+  }
+
+  Future<void> fetchRecommended(int id) async {
+    try {
+      _recommended.clear();
+      Map<String, dynamic> data = await _apiService.get(
+        endpoint: '/anime/$id/recommendations/',
+      );
+      print(data);
+      for (var ele in data['data']) {
+        _recommended.add(
+          Anime.formRecommendedJson(
+            ele['entry'],
+          ),
+        );
       }
-      result['data']['documents'].forEach((value) {
-        _animes.add(Anime(
-            id: value["id"] ?? 0,
-            title: value['titles']['en'] ?? "",
-            description: value['descriptions']['en'] ?? "",
-            season: value['season_period'] ?? 0,
-            episode: value['episodes_count'] ?? 0,
-            image: value["cover_image"] ?? "",
-            score: value['score'] ?? 0,
-            genres: value['genres'] ?? [],
-            trailer: value['trailer_url'] ?? "",
-            year: value['season_year'] ?? 0,
-            banner: value['banner_image'] ?? "",
-            duration: value['episode_duration'] ?? 0));
-      });
-      _datastatus = DataStatus.loaded;
+
       notifyListeners();
-    } catch (err) {
-      throw err.toString();
+    } catch (_) {
+      debugPrint('recomended error');
+      debugPrint(_.toString());
     }
   }
 
-  List<Anime> getAnimeByGnera(String gnera) {
+  List<Anime> getAnimeByGnera(int id) {
     List<Anime> result = [];
-    for (var element in _animes) {
-      if (element.genres.contains(gnera)) result.add(element);
+    for (var a in _animes) {
+      for (var gnere in a.genres!) {
+        if (gnere.malId == id) {
+          result.add(a);
+        }
+      }
     }
     result.shuffle();
     return result;
   }
 
-  Anime getAnimeById(int id) {
-    return _animes.firstWhere((element) => element.id == id);
+  Future<Anime> getAnimeById(int id) async {
+    Anime anime = _animes.firstWhere(
+      (element) => element.malId == id,
+      orElse: () => Anime(
+        malId: -1,
+      ),
+    );
+
+    if (anime.malId == -1) {
+      final data = await _apiService.get(
+        endpoint: '/anime/$id',
+      );
+
+      anime = Anime.fromJson(data['data']);
+    }
+    return anime;
   }
 }

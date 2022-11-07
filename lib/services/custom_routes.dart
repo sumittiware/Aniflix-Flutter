@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:aniflix/config/enum.dart';
+import 'package:aniflix/models/genra.dart';
 import 'package:aniflix/screens/all_anime_screen.dart';
-import 'package:aniflix/screens/all_episodes_page.dart';
 import 'package:aniflix/screens/detail.dart';
 import 'package:aniflix/screens/home_page.dart';
 import 'package:aniflix/screens/search_screen.dart';
@@ -30,36 +30,41 @@ class CustomRoutes {
         final id = arge['id'];
         final type = arge['type'];
         return MaterialPageRoute(
-            builder: (_) => AnimeDetail(id: id, type: ResultType.values[type]));
+          builder: (_) => AnimeDetail(
+            id: id,
+          ),
+        );
       case '/allanimescreen':
         final arge = json.decode(settings.arguments.toString());
-        final gnera = arge['gnera'];
+        print(arge);
+        final gnera = Genra.fromJson(arge['gnera']);
         final query = arge['query'];
         return MaterialPageRoute(
-            builder: (_) => AllAnimeScreen(
-                  genra: gnera,
-                  query: query,
-                ));
-      case '/allepisodescreen':
-        final arge = json.decode(settings.arguments.toString());
-        final id = arge['id'];
-        final title = arge['title'];
-        return MaterialPageRoute(
-            builder: (_) => AllEpisodesPage(id: id, title: title));
+          builder: (_) => AllAnimeScreen(
+            gnera: gnera,
+            query: query,
+          ),
+        );
+
       case '/videoscreen':
         final arge = json.decode(settings.arguments.toString());
         final videoUrl = arge['videoUrl'];
         final title = arge['title'];
         return MaterialPageRoute(
-            builder: (_) => VideoScreen(title: title, videoUrl: videoUrl));
+          builder: (_) => VideoScreen(
+            title: title,
+            videoUrl: videoUrl,
+          ),
+        );
       default:
         return MaterialPageRoute(
-            builder: (_) => Scaffold(
-                  appBar: AppBar(),
-                  body: const Center(
-                    child: Text("Page not found"),
-                  ),
-                ));
+          builder: (_) => Scaffold(
+            appBar: AppBar(),
+            body: const Center(
+              child: Text("Page not found"),
+            ),
+          ),
+        );
     }
   }
 }

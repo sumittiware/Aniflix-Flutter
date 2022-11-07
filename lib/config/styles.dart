@@ -7,9 +7,15 @@ class TextStyles {
       fontWeight: FontWeight.bold,
       fontFamily: "Bebas Neue");
 
-  static const TextStyle primaryTitle =
-      TextStyle(fontWeight: FontWeight.bold, fontSize: 22);
+  static const TextStyle primaryTitle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 18,
+  );
 
-  static const TextStyle secondaryTitle = TextStyle(fontSize: 20);
-  static const TextStyle secondaryTitle2 = TextStyle(fontSize: 18);
+  static const TextStyle secondaryTitle = TextStyle(
+    fontSize: 16,
+  );
+  static const TextStyle secondaryTitle2 = TextStyle(
+    fontSize: 14,
+  );
 }

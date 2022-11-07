@@ -1,29 +1,28 @@
-import 'package:aniflix/common/message.dart';
-import 'package:aniflix/common/progress_indicator.dart';
 import 'package:aniflix/config.dart';
 import 'package:aniflix/config/enum.dart';
 import 'package:aniflix/config/styles.dart';
 import 'package:aniflix/models/anime.dart';
 import 'package:aniflix/providers/animeprovider.dart';
-import 'package:aniflix/providers/bannerprovider.dart';
 import 'package:aniflix/providers/episodeprovider.dart';
-import 'package:aniflix/providers/searchprovider.dart';
-import 'package:aniflix/providers/songprovider.dart';
 import 'package:aniflix/providers/wishlistprovider.dart';
+import 'package:aniflix/widgets/anime_widget.dart';
+import 'package:aniflix/widgets/episode_tile.dart';
 import 'package:aniflix/widgets/episodes_list.dart';
-import 'package:aniflix/widgets/song_list.dart';
+import 'package:aniflix/widgets/recommendations_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:aniflix/common/constants.dart';
 
+import '../widgets/button.dart';
+
 class AnimeDetail extends StatefulWidget {
   final int id;
-  final ResultType type;
 
-  const AnimeDetail({Key? key, required this.id, required this.type})
-      : super(key: key);
+  const AnimeDetail({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
 
   @override
   _AnimeDetailState createState() => _AnimeDetailState();
@@ -33,66 +32,60 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
   // final RouteObserver routerObserver = RouteObserver();
   late YoutubePlayerController controller;
   late AnimeProvider animeProvider;
-  late SearchProvider searchProvider;
-  late BannerProvider bannerProvider;
+
   late EpisodeProvider episodeProvider;
   late WishListProvider wishlistProvider;
-  late SongProvider songProvider;
   late Anime anime = Anime(genres: []);
   bool loading = false;
-  bool showEpisodes = true;
+  bool _showEpisodes = true;
+  bool _fulldesc = false;
+  bool _trailerAvaliable = true;
 
   getResult() async {
-    switch (widget.type) {
-      case ResultType.all:
-        anime = animeProvider.getAnimeById(widget.id);
-        break;
-      case ResultType.gnera:
-        anime = searchProvider.getGneraById(widget.id);
-        break;
-      case ResultType.search:
-        anime = searchProvider.getSearchById(widget.id);
-        break;
-      case ResultType.banner:
-        anime = bannerProvider.getBanner();
-        break;
-      case ResultType.saved:
-        setState(() {
-          loading = true;
-        });
-        anime = await wishlistProvider.fetchById(widget.id);
-        setState(() {
-          loading = false;
-        });
-        break;
-    }
+    setState(() {
+      loading = true;
+    });
+    anime = await animeProvider.getAnimeById(widget.id);
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
   void initState() {
     super.initState();
+    print(widget.id);
     animeProvider = Provider.of<AnimeProvider>(context, listen: false);
-    searchProvider = Provider.of<SearchProvider>(context, listen: false);
-    bannerProvider = Provider.of<BannerProvider>(context, listen: false);
     episodeProvider = Provider.of<EpisodeProvider>(context, listen: false);
     wishlistProvider = Provider.of<WishListProvider>(context, listen: false);
-    songProvider = Provider.of<SongProvider>(context, listen: false);
     getResult();
-    controller = YoutubePlayerController(
-      initialVideoId: anime.trailer.split("/").last,
-      flags: const YoutubePlayerFlags(
+    episodeProvider.fetchEpisodes(widget.id);
+    animeProvider.fetchRecommended(widget.id);
+
+    if (anime.trailer != null && anime.trailer!.youtubeId != null) {
+      controller = YoutubePlayerController(
+        initialVideoId: anime.trailer!.youtubeId!,
+        flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: false,
           isLive: false,
           controlsVisibleAtStart: false,
           loop: false,
-          forceHD: false),
-    );
-    controller.addListener(() {
-      if (controller.value.hasError) {
-        setState(() {});
-      }
-    });
+          forceHD: false,
+        ),
+      );
+      controller.addListener(
+        () {
+          if (controller.value.hasError) {
+            setState(() {});
+          }
+        },
+      );
+    } else {
+      setState(() {
+        _trailerAvaliable = false;
+      });
+    }
   }
 
   @override
@@ -112,233 +105,251 @@ class _AnimeDetailState extends State<AnimeDetail> with RouteAware {
   void didPushNext() {
     hideStatusBar();
     controller.pause();
-    songProvider.pause();
     super.didPushNext();
   }
 
   @override
   void dispose() {
     episodeProvider.resetValues();
-    songProvider.resetValues();
     controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final padding = MediaQuery.of(context).padding;
     return Scaffold(
+      appBar: AppBar(),
       body: (loading)
-          ? const CustomProgressIndicator()
-          : SizedBox(
-              height: size.height,
-              width: size.width,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: padding.top),
-                    Stack(
-                      children: [
-                        (controller.value.hasError || anime.trailer == "")
-                            ? Image.network(
-                                (anime.banner != "")
-                                    ? anime.banner
-                                    : anime.image,
-                                fit: BoxFit.cover,
-                                width: size.width,
-                                height: size.height * 0.3)
-                            : YoutubePlayer(
-                                controller: controller,
-                                showVideoProgressIndicator: false,
-                                liveUIColor: Colors.red,
-                                // thumbnail: ,
-                              ),
-                        Positioned.fill(
-                            child: GestureDetector(
-                          onTap: () => setState(() {
-                            (controller.value.isPlaying)
-                                ? controller.pause()
-                                : controller.play();
-                          }),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  colors: [Colors.transparent, Colors.black],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter),
-                            ),
-                          ),
-                        )),
-                        Positioned(
-                            child: IconButton(
-                                onPressed: () => Navigator.pop(context),
-                                icon: const Icon(
-                                  Icons.arrow_back,
-                                  size: 30,
-                                )))
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: size.width,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.all(8),
-                              width: size.width * 0.3,
-                              height: size.height * 0.2,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                      image: NetworkImage(anime.image),
-                                      fit: BoxFit.cover)),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Text(
-                                      anime.title,
-                                      style: TextStyles.primaryTitle,
-                                    ),
-                                    Text(
-                                      anime.year.toString(),
-                                      style: TextStyles.secondaryTitle,
-                                    ),
-                                    Text(
-                                      "Score : ${anime.score}",
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    wishlistProvider
-                                        .addToWishlist(
-                                            anime.id, anime.title, anime.image)
-                                        .then((value) => showCustomSnackBar(
-                                            context, "Added to wishlist!!"))
-                                        .catchError((err) {
-                                      showCustomSnackBar(
-                                          context, err.toString());
-                                    });
-                                  },
-                                  icon: const Icon(Icons.add)),
-                              const Text("Add to List")
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.favorite_border)),
-                              const Text("Add to Favorite")
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.share)),
-                              const Text("Share")
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Html(data: anime.description),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(top: 8, bottom: 8),
-                      child: Text(
-                        "Total episodes : ${anime.episode} | Duration : ${anime.duration} min",
-                        style: TextStyles.secondaryTitle2,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: InkWell(
-                            onTap: () => setState(() {
-                              showEpisodes = true;
-                            }),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "Episodes",
-                                style: TextStyles.secondaryTitle2,
-                              ),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width: 3,
-                                          color: (showEpisodes)
-                                              ? Colors.red
-                                              : Colors.black))),
-                            ),
-                          )),
-                          Expanded(
-                              child: InkWell(
-                            onTap: () => setState(() {
-                              showEpisodes = false;
-                            }),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "Songs",
-                                style: TextStyles.secondaryTitle2,
-                              ),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width: 3,
-                                          color: (showEpisodes)
-                                              ? Colors.black
-                                              : Colors.red))),
-                            ),
-                          ))
-                        ],
-                      ),
-                    ),
-                    (showEpisodes)
-                        ? EpisodesList(id: anime.id, title: anime.title)
-                        : SongList(animeId: anime.id),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                  ],
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.red,
+              ),
+            )
+          : ListView(
+              children: [
+                _buildTrailerPlayer(),
+                _buildTitle(),
+                _buildInfo(),
+                _buildButtons(),
+                _buildDetails(),
+                _buildActionBar(),
+                _buildSection(),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildTrailerPlayer() {
+    final size = MediaQuery.of(context).size;
+    return Stack(
+      children: [
+        (!_trailerAvaliable)
+            ? Image.network(
+                anime.images!.largeImageUrl!,
+                fit: BoxFit.cover,
+                width: size.width,
+                height: size.height * 0.3,
+              )
+            : YoutubePlayer(
+                controller: controller,
+                showVideoProgressIndicator: false,
+                liveUIColor: Colors.red,
+              ),
+        Positioned.fill(
+            child: GestureDetector(
+          onTap: () => setState(
+            () {
+              (controller.value.isPlaying)
+                  ? controller.pause()
+                  : controller.play();
+            },
+          ),
+        )),
+      ],
+    );
+  }
+
+  Widget _buildTitle() {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Text(
+        anime.title ?? '',
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfo() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 4,
+      ),
+      child: Row(
+        children: [
+          if (anime.year != null)
+            Text(
+              anime.year.toString(),
+              style: TextStyles.secondaryTitle,
+            ),
+          if (anime.rating != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade800,
+                  borderRadius: BorderRadius.circular(4),
                 ),
+                child: Text(anime.rating!.split(' ').first),
               ),
             ),
+          if (anime.episodes != null)
+            Text(
+              '${anime.episodes} Episodes',
+              style: TextStyles.secondaryTitle,
+            )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtons() {
+    return Column(
+      children: [
+        CustomButtons().textButton(
+          label: 'Play',
+          onTap: () {},
+          icon: Icons.play_arrow,
+        ),
+        CustomButtons().textButton(
+          label: 'Download',
+          onTap: () {},
+          icon: Icons.download_sharp,
+          revert: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetails() {
+    return StatefulBuilder(builder: (context, ss) {
+      return Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              anime.synopsis ?? '',
+              maxLines: _fulldesc ? null : 3,
+            ),
+            GestureDetector(
+              onTap: () {
+                ss(() {
+                  _fulldesc = !_fulldesc;
+                });
+              },
+              child: Text(
+                _fulldesc ? '...less' : '...more',
+                style: const TextStyle(color: Colors.grey),
+              ),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildActionBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CustomButtons().iconButton(
+            icon: Icons.add,
+            onTap: () {},
+            label: 'My List',
+          ),
+          CustomButtons().iconButton(
+            icon: Icons.thumb_up_outlined,
+            onTap: () {},
+            label: 'Rate',
+          ),
+          CustomButtons().iconButton(
+            icon: Icons.share,
+            onTap: () {},
+            label: 'Share',
+          ),
+          CustomButtons().iconButton(
+            icon: Icons.download_sharp,
+            onTap: () {},
+            label: 'Download',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection() {
+    final size = MediaQuery.of(context).size;
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            top: 8,
+          ),
+          width: size.width,
+          height: 1,
+          color: Colors.grey,
+        ),
+        Row(
+          children: [
+            _buildSectionButton(
+              'EPISODES',
+              _showEpisodes,
+            ),
+            _buildSectionButton(
+              'MORE LIKE THIS',
+              !_showEpisodes,
+            )
+          ],
+        ),
+        _showEpisodes
+            ? EpisodesList(
+                anime: anime,
+              )
+            : RecommendedAnimes(
+                animeId: widget.id,
+              )
+      ],
+    );
+  }
+
+  Widget _buildSectionButton(
+    String title,
+    bool value,
+  ) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _showEpisodes = !_showEpisodes;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border(
+            top: (value)
+                ? BorderSide(color: Colors.red.shade800, width: 4)
+                : BorderSide.none,
+          ),
+        ),
+        child: Text(title),
+      ),
     );
   }
 }

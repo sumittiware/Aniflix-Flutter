@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:aniflix/models/episode.dart';
+import 'package:aniflix/services/api_services.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class EpisodeProvider with ChangeNotifier {
+  final _apiService = ApiService();
   final List<Episode> _eposides = [];
   bool _isFetched = false;
   late int lastPage = 1;
@@ -13,33 +14,35 @@ class EpisodeProvider with ChangeNotifier {
   bool get isFetched => _isFetched;
 
   Episode getById(int id) =>
-      _eposides.firstWhere((element) => element.id == id);
+      _eposides.firstWhere((element) => element.malId == id);
 
   Future<void> fetchEpisodes(int animeId) async {
     try {
-      if (currentPage == lastPage) throw "That's all!!";
-      final url = Uri.parse(
-          "https://api.aniapi.com/v1/episode?anime_id=$animeId&source=dreamsub&locale=it&page=${currentPage + 1}");
-      final response = await http.get(url);
-      final result = json.decode(response.body);
-      if (result['status_code'] != 200) {
-        throw result['message'] ?? "Something went wrong!!";
+      Map<String, dynamic> data = await _apiService.get(
+        endpoint: '/anime/$animeId/episodes/',
+      );
+      for (var ele in data['data']) {
+        _eposides.add(
+          Episode.fromJson(ele),
+        );
       }
-      result['data']['documents'].forEach((element) {
-        _eposides.add(Episode(
-            id: element['id'] ?? "-1",
-            animeId: element['anime_id'] ?? -1,
-            title: element['title'].toString(),
-            number: element['number'] ?? -1,
-            videoUrl: element['video'].toString()));
-      });
-      currentPage = result['data']['current_page'];
-      lastPage = result['data']['last_page'];
-      _isFetched = true;
       notifyListeners();
-    } catch (err) {
-      throw err.toString();
+    } catch (_) {
+      print(_.toString());
     }
+  }
+
+  Future<String> getEpisodesDetail(
+    int animeId,
+    int episodeId,
+  ) async {
+    Map<String, dynamic> data = await _apiService.get(
+      endpoint: '/anime/$animeId/episodes/$episodeId',
+    );
+    if (data['data'].isNotEmpty) {
+      return data['data']['synopsis'];
+    }
+    return '';
   }
 
   void resetValues() {
