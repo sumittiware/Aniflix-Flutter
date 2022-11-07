@@ -1,3 +1,5 @@
+## NOTE : Please switch to Jikan-API branch for new version of the app, following screenshots belong to older version.
+
 # Aniflix 
 
 Netflix clone made with Flutter and [AniApi](https://www.aniapi.com) to explore and stream anime
