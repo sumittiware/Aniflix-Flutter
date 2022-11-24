@@ -4,7 +4,7 @@
 
 Netflix clone made with Flutter and [AniApi](https://www.aniapi.com) to explore and stream anime
 
-[![Aniflix UI design](https://yt-embed.herokuapp.com/embed?v=tyFclCwYgrs)](https://youtube.com/shorts/tyFclCwYgrs "Everything Is AWESOME")
+[![Aniflix UI design](https://yt-embed.herokuapp.com/embed?v=tyFclCwYgrs)](https://youtube.com/shorts/tyFclCwYgrs "Aniflix UI design")
 
 <br>-> Flutter Providers are used for the state management in the overall app.
 <br>-> Pagination for implementing infinite scrolling and makeing user experience better.
